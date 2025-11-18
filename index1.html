@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chromebook Policy Test</title>
+</head>
+<body>
+    <h1>Chromebook Test</h1>
+    <div id="results"></div>
+    <script>
+        const results = document.getElementById('results');
+        
+        // Test 1: Script execution
+        results.innerHTML += '<p>✅ Inline JavaScript executed</p>';
+        
+        // Test 2: Fetch to external domain
+        fetch('https://httpbin.org/get')
+            .then(response => response.json())
+            .then(data => {
+                results.innerHTML += '<p>✅ External fetch() succeeded</p>';
+            })
+            .catch(error => {
+                results.innerHTML += '<p>❌ Fetch blocked: ' + error.message + '</p>';
+            });
+        
+        // Test 3: Local storage
+        try {
+            localStorage.setItem('test', 'value');
+            results.innerHTML += '<p>✅ localStorage works</p>';
+        } catch(e) {
+            results.innerHTML += '<p>❌ localStorage blocked</p>';
+        }
+    </script>
+</body>
+</html>

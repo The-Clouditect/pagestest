@@ -1,34 +1,538 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chromebook Policy Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Research Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+        }
+        
+        .questions-pane {
+            background: #fff;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .mode-toggle {
+            margin: 20px 0;
+            padding: 10px;
+            background: #e8e8e8;
+            border-radius: 5px;
+        }
+        
+        .mode-toggle button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 2px solid #666;
+            background: white;
+            border-radius: 3px;
+        }
+        
+        .mode-toggle button.active {
+            background: #333;
+            color: white;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .passage.select-mode {
+            cursor: text;
+            user-select: text;
+        }
+        
+        .passage.read-mode {
+            user-select: none;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .submit-section button {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover {
+            background: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Chromebook Test</h1>
-    <div id="results"></div>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="header">
+                <h1>Reading Passages</h1>
+            </div>
+            
+            <div class="mode-toggle">
+                <button id="readMode" class="active">Read Mode</button>
+                <button id="selectMode">Select/Highlight Mode</button>
+            </div>
+            
+            <!-- Passage 1 -->
+            <div class="passage read-mode" id="passage1" data-passage="1">
+                <h2>Passage 1</h2>
+                <p>{{PASSAGE_1_TEXT}}</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            
+            <!-- Passage 2 -->
+            <div class="passage read-mode" id="passage2" data-passage="2">
+                <h2>Passage 2</h2>
+                <p>{{PASSAGE_2_TEXT}}</p>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+            </div>
+        </div>
+        
+        <!-- Questions Pane -->
+        <div class="pane questions-pane">
+            <div class="header">
+                <h1>Questions</h1>
+            </div>
+            
+            <div class="student-id-section">
+                <label for="studentId"><strong>Student ID:</strong></label>
+                <input type="text" id="studentId" placeholder="Enter your ID" required>
+            </div>
+            
+            <!-- Passage 1 Questions -->
+            <div class="question-set">
+                <h2>Passage 1 Questions</h2>
+                
+                <div class="question">
+                    <div class="question-text">1. {{PASSAGE_1_Q1_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q1" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q1" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q1" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q1" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">2. {{PASSAGE_1_Q2_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q2" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q2" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q2" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q2" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">3. {{PASSAGE_1_Q3_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q3" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q3" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q3" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q3" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">4. {{PASSAGE_1_Q4_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q4" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q4" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q4" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q4" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">5. {{PASSAGE_1_Q5_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q5" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q5" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q5" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q5" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">6. {{PASSAGE_1_Q6_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q6" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q6" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q6" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q6" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">7. {{PASSAGE_1_Q7_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p1q7" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q7" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q7" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p1q7" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+            </div>
+            
+            <!-- Passage 2 Questions -->
+            <div class="question-set">
+                <h2>Passage 2 Questions</h2>
+                
+                <div class="question">
+                    <div class="question-text">8. {{PASSAGE_2_Q1_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q1" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q1" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q1" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q1" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">9. {{PASSAGE_2_Q2_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q2" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q2" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q2" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q2" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">10. {{PASSAGE_2_Q3_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q3" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q3" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q3" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q3" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">11. {{PASSAGE_2_Q4_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q4" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q4" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q4" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q4" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">12. {{PASSAGE_2_Q5_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q5" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q5" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q5" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q5" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">13. {{PASSAGE_2_Q6_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q6" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q6" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q6" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q6" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">14. {{PASSAGE_2_Q7_TEXT}}</div>
+                    <div class="option"><label><input type="radio" name="p2q7" value="A"> A. {{OPTION_A}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q7" value="B"> B. {{OPTION_B}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q7" value="C"> C. {{OPTION_C}}</label></div>
+                    <div class="option"><label><input type="radio" name="p2q7" value="D"> D. {{OPTION_D}}</label></div>
+                </div>
+            </div>
+            
+            <div class="submit-section">
+                <button id="submitBtn">Submit Test</button>
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        const results = document.getElementById('results');
+        // Highlight management
+        const highlights = {
+            passage1: [],
+            passage2: []
+        };
         
-        // Test 1: Script execution
-        results.innerHTML += '<p>✅ Inline JavaScript executed</p>';
+        // Mode toggle
+        const readModeBtn = document.getElementById('readMode');
+        const selectModeBtn = document.getElementById('selectMode');
+        const passages = document.querySelectorAll('.passage');
         
-        // Test 2: Fetch to external domain
-        fetch('https://httpbin.org/get')
-            .then(response => response.json())
-            .then(data => {
-                results.innerHTML += '<p>✅ External fetch() succeeded</p>';
-            })
-            .catch(error => {
-                results.innerHTML += '<p>❌ Fetch blocked: ' + error.message + '</p>';
+        readModeBtn.addEventListener('click', () => {
+            passages.forEach(p => {
+                p.classList.remove('select-mode');
+                p.classList.add('read-mode');
             });
+            readModeBtn.classList.add('active');
+            selectModeBtn.classList.remove('active');
+        });
         
-        // Test 3: Local storage
-        try {
-            localStorage.setItem('test', 'value');
-            results.innerHTML += '<p>✅ localStorage works</p>';
-        } catch(e) {
-            results.innerHTML += '<p>❌ localStorage blocked</p>';
+        selectModeBtn.addEventListener('click', () => {
+            passages.forEach(p => {
+                p.classList.remove('read-mode');
+                p.classList.add('select-mode');
+            });
+            selectModeBtn.classList.add('active');
+            readModeBtn.classList.remove('active');
+        });
+        
+        // Highlighting functionality
+        passages.forEach(passage => {
+            passage.addEventListener('mouseup', function() {
+                if (!this.classList.contains('select-mode')) return;
+                
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+                
+                if (selectedText.length > 0) {
+                    const passageId = this.id;
+                    highlights[passageId].push(selectedText);
+                    
+                    // Visual feedback
+                    const range = selection.getRangeAt(0);
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    range.surroundContents(span);
+                    
+                    selection.removeAllRanges();
+                }
+            });
+        });
+        
+        // CSV generation function
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            // If contains comma, quote, or newline, wrap in quotes and escape internal quotes
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
         }
+        
+        function downloadCSV(studentId, answers, text1Annotations, text2Annotations) {
+            // CSV Header
+            const headers = [
+                'ID',
+                'Text1-Annotations',
+                'Text1-Answer1', 'Text1-Answer2', 'Text1-Answer3', 'Text1-Answer4', 
+                'Text1-Answer5', 'Text1-Answer6', 'Text1-Answer7',
+                'Text2-Annotations',
+                'Text2-Answer1', 'Text2-Answer2', 'Text2-Answer3', 'Text2-Answer4', 
+                'Text2-Answer5', 'Text2-Answer6', 'Text2-Answer7'
+            ];
+            
+            // Convert annotation arrays to JSON strings
+            const text1AnnotationsJSON = JSON.stringify(text1Annotations);
+            const text2AnnotationsJSON = JSON.stringify(text2Annotations);
+            
+            // Data row
+            const row = [
+                studentId,
+                text1AnnotationsJSON,
+                answers.p1q1 || '',
+                answers.p1q2 || '',
+                answers.p1q3 || '',
+                answers.p1q4 || '',
+                answers.p1q5 || '',
+                answers.p1q6 || '',
+                answers.p1q7 || '',
+                text2AnnotationsJSON,
+                answers.p2q1 || '',
+                answers.p2q2 || '',
+                answers.p2q3 || '',
+                answers.p2q4 || '',
+                answers.p2q5 || '',
+                answers.p2q6 || '',
+                answers.p2q7 || ''
+            ];
+            
+            // Build CSV content
+            const csvContent = headers.map(escapeCSV).join(',') + '\n' + 
+                             row.map(escapeCSV).join(',');
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Please enter your Student ID';
+                return;
+            }
+            
+            // Collect answers
+            const answers = {};
+            const questionNames = [
+                'p1q1', 'p1q2', 'p1q3', 'p1q4', 'p1q5', 'p1q6', 'p1q7',
+                'p2q1', 'p2q2', 'p2q3', 'p2q4', 'p2q5', 'p2q6', 'p2q7'
+            ];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                answers[name] = selected ? selected.value : '';
+            });
+            
+            // Disable button
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                // Generate and download CSV
+                downloadCSV(
+                    studentId,
+                    answers,
+                    highlights.passage1,
+                    highlights.passage2
+                );
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                // Re-enable after 3 seconds in case student needs to re-download
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
