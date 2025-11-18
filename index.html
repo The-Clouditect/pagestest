@@ -57,28 +57,6 @@
             margin-left: 10px;
         }
         
-        .mode-toggle {
-            margin: 20px 0;
-            padding: 10px;
-            background: #e8e8e8;
-            border-radius: 5px;
-        }
-        
-        .mode-toggle button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            font-size: 14px;
-            cursor: pointer;
-            border: 2px solid #666;
-            background: white;
-            border-radius: 3px;
-        }
-        
-        .mode-toggle button.active {
-            background: #333;
-            color: white;
-        }
-        
         .passage {
             background: white;
             padding: 25px;
@@ -86,21 +64,13 @@
             border-radius: 5px;
             line-height: 1.8;
             font-size: 16px;
+            cursor: text;
+            user-select: text;
         }
         
         .passage h2 {
             margin-bottom: 15px;
             color: #333;
-        }
-        
-        .passage.select-mode {
-            cursor: text;
-            user-select: text;
-        }
-        
-        .passage.read-mode {
-            user-select: text;
-            cursor: default;
         }
         
         .highlight {
@@ -114,6 +84,8 @@
             background: #f0f0f0;
             border-radius: 5px;
             font-size: 13px;
+            max-height: 250px;
+            overflow-y: auto;
         }
         
         .highlights-list h3 {
@@ -131,10 +103,33 @@
         .highlights-list li {
             padding: 5px 0;
             border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .highlights-list li:last-child {
             border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
         }
         
         .question-set {
@@ -178,31 +173,75 @@
         }
         
         .submit-section {
-            margin-top: 40px;
-            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .part-nav-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
             background: #f0f0f0;
+            color: #333;
+            border: 2px solid #666;
             border-radius: 5px;
-            text-align: center;
+        }
+        
+        .part-nav-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .part-nav-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
         }
         
         .submit-section button {
-            padding: 15px 40px;
-            font-size: 18px;
+            padding: 12px 40px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             background: #333;
             color: white;
-            border: none;
+            border: 2px solid #333;
             border-radius: 5px;
         }
         
-        .submit-section button:hover {
+        .submit-section button:hover:not(:disabled) {
             background: #555;
+            border-color: #555;
         }
         
         .submit-section button:disabled {
             background: #ccc;
+            border-color: #ccc;
             cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .part-content {
+            display: none;
+        }
+        
+        .part-content.active {
+            display: block;
+        }
+        
+        .pane {
+            padding-bottom: 100px; /* Space for fixed bottom nav */
         }
         
         .status-message {
@@ -231,35 +270,35 @@
         <div class="pane reading-pane">
             <div class="header">
                 <h1>Reading Passages</h1>
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
             </div>
             
-            <div class="mode-toggle">
-                <button id="readMode" class="active">Read Mode</button>
-                <button id="selectMode">Select/Highlight Mode</button>
+            <!-- Part 1 Content -->
+            <div class="part-content active" id="part1-reading">
+                <div class="passage" id="passage1" data-passage="1">
+                    <h2>Passage 1</h2>
+                    <p>{{PASSAGE_1_TEXT}}</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                
+                <div class="highlights-list">
+                    <h3>Your Passage 1 Highlights:</h3>
+                    <ul id="highlights-passage1"></ul>
+                </div>
             </div>
             
-            <!-- Passage 1 -->
-            <div class="passage read-mode" id="passage1" data-passage="1">
-                <h2>Passage 1</h2>
-                <p>{{PASSAGE_1_TEXT}}</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
-            
-            <div class="highlights-list">
-                <h3>Your Passage 1 Highlights:</h3>
-                <ul id="highlights-passage1"></ul>
-            </div>
-            
-            <!-- Passage 2 -->
-            <div class="passage read-mode" id="passage2" data-passage="2">
-                <h2>Passage 2</h2>
-                <p>{{PASSAGE_2_TEXT}}</p>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-            </div>
-            
-            <div class="highlights-list">
-                <h3>Your Passage 2 Highlights:</h3>
-                <ul id="highlights-passage2"></ul>
+            <!-- Part 2 Content -->
+            <div class="part-content" id="part2-reading">
+                <div class="passage" id="passage2" data-passage="2">
+                    <h2>Passage 2</h2>
+                    <p>{{PASSAGE_2_TEXT}}</p>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                </div>
+                
+                <div class="highlights-list">
+                    <h3>Your Passage 2 Highlights:</h3>
+                    <ul id="highlights-passage2"></ul>
+                </div>
             </div>
         </div>
         
@@ -274,197 +313,224 @@
                 <input type="text" id="studentId" placeholder="Enter your ID" required>
             </div>
             
-            <!-- Passage 1 Questions -->
-            <div class="question-set">
-                <h2>Passage 1 Questions</h2>
-                
-                <div class="question">
-                    <div class="question-text">1. {{PASSAGE_1_Q1_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q1" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q1" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q1" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q1" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">2. {{PASSAGE_1_Q2_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q2" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q2" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q2" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q2" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">3. {{PASSAGE_1_Q3_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q3" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q3" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q3" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q3" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">4. {{PASSAGE_1_Q4_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q4" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q4" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q4" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q4" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">5. {{PASSAGE_1_Q5_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q5" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q5" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q5" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q5" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">6. {{PASSAGE_1_Q6_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q6" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q6" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q6" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q6" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">7. {{PASSAGE_1_Q7_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p1q7" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q7" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q7" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p1q7" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-            </div>
-            
-            <!-- Passage 2 Questions -->
-            <div class="question-set">
-                <h2>Passage 2 Questions</h2>
-                
-                <div class="question">
-                    <div class="question-text">8. {{PASSAGE_2_Q1_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q1" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q1" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q1" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q1" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">9. {{PASSAGE_2_Q2_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q2" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q2" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q2" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q2" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">10. {{PASSAGE_2_Q3_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q3" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q3" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q3" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q3" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">11. {{PASSAGE_2_Q4_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q4" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q4" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q4" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q4" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">12. {{PASSAGE_2_Q5_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q5" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q5" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q5" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q5" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">13. {{PASSAGE_2_Q6_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q6" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q6" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q6" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q6" value="D"> D. {{OPTION_D}}</label></div>
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">14. {{PASSAGE_2_Q7_TEXT}}</div>
-                    <div class="option"><label><input type="radio" name="p2q7" value="A"> A. {{OPTION_A}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q7" value="B"> B. {{OPTION_B}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q7" value="C"> C. {{OPTION_C}}</label></div>
-                    <div class="option"><label><input type="radio" name="p2q7" value="D"> D. {{OPTION_D}}</label></div>
+            <!-- Part 1 Questions -->
+            <div class="part-content active" id="part1-questions">
+                <div class="question-set">
+                    <h2>Passage 1 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">1. {{PASSAGE_1_Q1_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. {{PASSAGE_1_Q2_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. {{PASSAGE_1_Q3_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. {{PASSAGE_1_Q4_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. {{PASSAGE_1_Q5_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. {{PASSAGE_1_Q6_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">7. {{PASSAGE_1_Q7_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
                 </div>
             </div>
             
-            <div class="submit-section">
-                <button id="submitBtn">Submit Test</button>
-                <div id="statusMessage" class="status-message"></div>
+            <!-- Part 2 Questions -->
+            <div class="part-content" id="part2-questions">
+                <div class="question-set">
+                    <h2>Passage 2 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">8. {{PASSAGE_2_Q1_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. {{PASSAGE_2_Q2_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">10. {{PASSAGE_2_Q3_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">11. {{PASSAGE_2_Q4_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">12. {{PASSAGE_2_Q5_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">13. {{PASSAGE_2_Q6_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">14. {{PASSAGE_2_Q7_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="D"> D. {{OPTION_D}}</label></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- Bottom Navigation with Part buttons and Submit -->
+    <div class="submit-section">
+        <button class="part-nav-btn active" id="part1Btn">Part 1</button>
+        <button class="part-nav-btn" id="part2Btn">Part 2</button>
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
     <script>
-        // Highlight management
+        // Highlight management - track both text and visual elements
         const highlights = {
             passage1: [],
             passage2: []
         };
         
-        // Mode toggle
-        const readModeBtn = document.getElementById('readMode');
-        const selectModeBtn = document.getElementById('selectMode');
-        const passages = document.querySelectorAll('.passage');
+        // Part navigation
+        const part1Btn = document.getElementById('part1Btn');
+        const part2Btn = document.getElementById('part2Btn');
+        const part1Reading = document.getElementById('part1-reading');
+        const part2Reading = document.getElementById('part2-reading');
+        const part1Questions = document.getElementById('part1-questions');
+        const part2Questions = document.getElementById('part2-questions');
         
-        readModeBtn.addEventListener('click', () => {
-            passages.forEach(p => {
-                p.classList.remove('select-mode');
-                p.classList.add('read-mode');
-            });
-            readModeBtn.classList.add('active');
-            selectModeBtn.classList.remove('active');
+        part1Btn.addEventListener('click', () => {
+            // Show Part 1
+            part1Reading.classList.add('active');
+            part1Questions.classList.add('active');
+            part2Reading.classList.remove('active');
+            part2Questions.classList.remove('active');
+            
+            // Update button states
+            part1Btn.classList.add('active');
+            part2Btn.classList.remove('active');
         });
         
-        selectModeBtn.addEventListener('click', () => {
-            passages.forEach(p => {
-                p.classList.remove('read-mode');
-                p.classList.add('select-mode');
-            });
-            selectModeBtn.classList.add('active');
-            readModeBtn.classList.remove('active');
+        part2Btn.addEventListener('click', () => {
+            // Show Part 2
+            part2Reading.classList.add('active');
+            part2Questions.classList.add('active');
+            part1Reading.classList.remove('active');
+            part1Questions.classList.remove('active');
+            
+            // Update button states
+            part2Btn.classList.add('active');
+            part1Btn.classList.remove('active');
         });
         
         // Highlighting functionality
+        const passages = document.querySelectorAll('.passage');
+        let highlightCounter = 0; // Unique ID for each highlight
+        
         passages.forEach(passage => {
             passage.addEventListener('mouseup', function() {
-                if (!this.classList.contains('select-mode')) return;
-                
                 const selection = window.getSelection();
                 const selectedText = selection.toString().trim();
                 
                 if (selectedText.length > 0) {
                     const passageId = this.id;
-                    
-                    // Only store the actual selected text
-                    highlights[passageId].push(selectedText);
-                    
-                    // Update the highlights list display
-                    updateHighlightsList(passageId);
+                    highlightCounter++;
+                    const highlightId = 'highlight-' + highlightCounter;
                     
                     // Visual feedback - highlight the selected text
+                    let highlightElements = [];
                     try {
                         const range = selection.getRangeAt(0);
                         const span = document.createElement('span');
                         span.className = 'highlight';
+                        span.setAttribute('data-highlight-id', highlightId);
                         
                         // Extract contents, wrap in span, and reinsert
                         const contents = range.extractContents();
                         span.appendChild(contents);
                         range.insertNode(span);
                         
+                        highlightElements.push(span);
+                        
                     } catch (e) {
-                        // If highlighting fails (e.g., complex selection), still store the text
+                        // If highlighting fails, still store the text
                         console.log('Could not apply visual highlight, but text was saved');
                     }
+                    
+                    // Store both the text and reference to visual elements
+                    highlights[passageId].push({
+                        text: selectedText,
+                        id: highlightId,
+                        elements: highlightElements
+                    });
+                    
+                    // Update the highlights list display
+                    updateHighlightsList(passageId);
                     
                     selection.removeAllRanges();
                 }
@@ -482,9 +548,38 @@
             if (highlightArray.length === 0) {
                 listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
             } else {
-                highlightArray.forEach((text, index) => {
+                highlightArray.forEach((highlight, index) => {
                     const li = document.createElement('li');
-                    li.textContent = `${index + 1}. ${text}`;
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        // Remove visual highlights from the text
+                        highlight.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                // Replace the highlight span with its text content
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        // Remove from the array
+                        highlights[passageId].splice(index, 1);
+                        
+                        // Refresh the list
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
                     listElement.appendChild(li);
                 });
             }
@@ -493,6 +588,31 @@
         // Initialize highlight lists as empty
         updateHighlightsList('passage1');
         updateHighlightsList('passage2');
+        
+        // Dynamically detect all questions from the HTML
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate human-readable label from question name (e.g., p1q3 -> Part 1, Question 3)
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/p(\d+)q(\d+)/);
+            if (match) {
+                const partNum = match[1];
+                const questionNum = match[2];
+                // Calculate overall question number
+                const overallNum = partNum === '1' ? parseInt(questionNum) : 7 + parseInt(questionNum);
+                return `Part ${partNum}, Question ${overallNum}`;
+            }
+            return questionName; // Fallback
+        }
         
         // CSV generation function
         function escapeCSV(value) {
@@ -506,40 +626,26 @@
         }
         
         function downloadCSV(studentId, answers, text1Annotations, text2Annotations) {
-            // CSV Header
-            const headers = [
-                'ID',
-                'Text1-Annotations',
-                'Text1-Answer1', 'Text1-Answer2', 'Text1-Answer3', 'Text1-Answer4', 
-                'Text1-Answer5', 'Text1-Answer6', 'Text1-Answer7',
-                'Text2-Annotations',
-                'Text2-Answer1', 'Text2-Answer2', 'Text2-Answer3', 'Text2-Answer4', 
-                'Text2-Answer5', 'Text2-Answer6', 'Text2-Answer7'
-            ];
+            // Convert annotation arrays to JSON strings (extract just the text)
+            const text1Texts = text1Annotations.map(h => h.text);
+            const text2Texts = text2Annotations.map(h => h.text);
+            const text1AnnotationsJSON = JSON.stringify(text1Texts);
+            const text2AnnotationsJSON = JSON.stringify(text2Texts);
             
-            // Convert annotation arrays to JSON strings
-            const text1AnnotationsJSON = JSON.stringify(text1Annotations);
-            const text2AnnotationsJSON = JSON.stringify(text2Annotations);
+            // Get all question names dynamically
+            const questionNames = getAllQuestionNames();
             
-            // Data row
+            // Separate Part 1 and Part 2 questions
+            const part1Questions = questionNames.filter(name => name.startsWith('p1'));
+            const part2Questions = questionNames.filter(name => name.startsWith('p2'));
+            
+            // Build data row dynamically
             const row = [
                 studentId,
                 text1AnnotationsJSON,
-                answers.p1q1 || '',
-                answers.p1q2 || '',
-                answers.p1q3 || '',
-                answers.p1q4 || '',
-                answers.p1q5 || '',
-                answers.p1q6 || '',
-                answers.p1q7 || '',
+                ...part1Questions.map(name => answers[name] || ''),
                 text2AnnotationsJSON,
-                answers.p2q1 || '',
-                answers.p2q2 || '',
-                answers.p2q3 || '',
-                answers.p2q4 || '',
-                answers.p2q5 || '',
-                answers.p2q6 || '',
-                answers.p2q7 || ''
+                ...part2Questions.map(name => answers[name] || '')
             ];
             
             // Build CSV content (no header, just data row)
@@ -558,30 +664,51 @@
             document.body.removeChild(link);
         }
         
-        // Submit handler
+        // Submit handler with dynamic validation
         document.getElementById('submitBtn').addEventListener('click', function() {
             const studentId = document.getElementById('studentId').value.trim();
             const statusDiv = document.getElementById('statusMessage');
             
+            // Validate student ID
             if (!studentId) {
                 statusDiv.className = 'status-message error';
-                statusDiv.textContent = 'Please enter your Student ID';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
                 return;
             }
             
-            // Collect answers
+            // Get all questions dynamically
+            const questionNames = getAllQuestionNames();
+            
+            // Collect and validate answers
             const answers = {};
-            const questionNames = [
-                'p1q1', 'p1q2', 'p1q3', 'p1q4', 'p1q5', 'p1q6', 'p1q7',
-                'p2q1', 'p2q2', 'p2q3', 'p2q4', 'p2q5', 'p2q6', 'p2q7'
-            ];
+            let missingQuestions = [];
             
             questionNames.forEach(name => {
                 const selected = document.querySelector(`input[name="${name}"]:checked`);
-                answers[name] = selected ? selected.value : '';
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
             });
             
-            // Disable button
+            // Check if any questions are missing
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during download
             this.disabled = true;
             statusDiv.className = 'status-message';
             statusDiv.textContent = 'Generating CSV...';
@@ -599,7 +726,7 @@
                 statusDiv.className = 'status-message success';
                 statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
                 
-                // Re-enable after 3 seconds in case student needs to re-download
+                // Re-enable after 3 seconds
                 setTimeout(() => {
                     this.disabled = false;
                 }, 3000);
