@@ -99,12 +99,42 @@
         }
         
         .passage.read-mode {
-            user-select: none;
+            user-select: text;
+            cursor: default;
         }
         
         .highlight {
             background-color: #ffeb3b;
             padding: 2px 0;
+        }
+        
+        .highlights-list {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
         }
         
         .question-set {
@@ -215,11 +245,21 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
             
+            <div class="highlights-list">
+                <h3>Your Passage 1 Highlights:</h3>
+                <ul id="highlights-passage1"></ul>
+            </div>
+            
             <!-- Passage 2 -->
             <div class="passage read-mode" id="passage2" data-passage="2">
                 <h2>Passage 2</h2>
                 <p>{{PASSAGE_2_TEXT}}</p>
                 <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+            </div>
+            
+            <div class="highlights-list">
+                <h3>Your Passage 2 Highlights:</h3>
+                <ul id="highlights-passage2"></ul>
             </div>
         </div>
         
@@ -403,18 +443,56 @@
                 
                 if (selectedText.length > 0) {
                     const passageId = this.id;
+                    
+                    // Only store the actual selected text
                     highlights[passageId].push(selectedText);
                     
-                    // Visual feedback
-                    const range = selection.getRangeAt(0);
-                    const span = document.createElement('span');
-                    span.className = 'highlight';
-                    range.surroundContents(span);
+                    // Update the highlights list display
+                    updateHighlightsList(passageId);
+                    
+                    // Visual feedback - highlight the selected text
+                    try {
+                        const range = selection.getRangeAt(0);
+                        const span = document.createElement('span');
+                        span.className = 'highlight';
+                        
+                        // Extract contents, wrap in span, and reinsert
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
+                        
+                    } catch (e) {
+                        // If highlighting fails (e.g., complex selection), still store the text
+                        console.log('Could not apply visual highlight, but text was saved');
+                    }
                     
                     selection.removeAllRanges();
                 }
             });
         });
+        
+        // Update the highlights list display
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((text, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1}. ${text}`;
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize highlight lists as empty
+        updateHighlightsList('passage1');
+        updateHighlightsList('passage2');
         
         // CSV generation function
         function escapeCSV(value) {
@@ -464,9 +542,8 @@
                 answers.p2q7 || ''
             ];
             
-            // Build CSV content
-            const csvContent = headers.map(escapeCSV).join(',') + '\n' + 
-                             row.map(escapeCSV).join(',');
+            // Build CSV content (no header, just data row)
+            const csvContent = row.map(escapeCSV).join(',');
             
             // Create blob and download
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
