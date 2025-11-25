@@ -276,52 +276,9 @@
             <!-- Part 1 Content -->
             <div class="part-content active" id="part1-reading">
                 <div class="passage" id="passage1" data-passage="1">
-                    <h2>Excerpt from Becoming Kareem: Growing Up On and Oﬀ the Court</h2>
-                    <p><em>(1)</em>When I started high school, I was fourteen years old and six foot ten. The scary thing
-about being so tall when you’re so young is that people automatically treat you as if you’re
-older. Size implies maturity. Yes, I was the size of an adult (actually, bigger than most!), but
-I was still just a kid. And acting more like an adult wouldn’t win me any friends. As a card-
-carrying1 Good Boy, I wanted to meet adults’ expectations and get their praise, but as a
-Regular Kid, I wanted to be like my peers and get their friendship. . . .</p>
-                    <p><em>(2)</em>I walked into school that first day resplendent2 in my blue blazer and slacks, the
-school uniform. We all looked like baby-faced accountants in training. I noticed some of
-my old classmates from St. Jude, the ones who had turned their backs on me, and we
-continued our policy of actively ignoring one another. I felt the pain of their betrayal, but I
-forced my face to remain expressionless. I couldn’t let them see that they had hurt me. I
-shoved the pain deep down into the coldest part of my heart. I was here to study hard at
-academics and to work hard at basketball under my new coach, Jack Donahue. I was here
-to excel. Nothing else mattered.</p>
-                    <p><em>(3)</em>I did excel. I made the honor roll my first semester, pleasing my parents and teachers.
-Learning came naturally to me. I loved reading, especially about history and adventure
-stories like The Theree Musketeers. Basketball, however, I had to work at to do well in. But
-the fierce competitor that had been awakened in me loved challenges. . . .</p>  
-                    <p><em>(4)</em>My refuge3 from the explosive turmoil4 outside, and the implosive turmoil I had
-started to feel inside, was basketball. The practices were so exhausting that I barely had
-time to think about anything else. Every school day I crawled out of bed early, went to
-school, practiced basketball until five o’clock, staggered home, powered through my
-homework, zoned out in front of the TV, and went to bed.</p>
-                    <p><em>(5)</em>Weekends, I hung out with my only close friend left in the projects, Norbert. We
-would shut ourselves in my room to play chess and talk about our plans for the future. He was determined to become a draftsman, making detailed drawings for engineers who were inventing wonderful new machines. I was going to be an architect and create futuristic
-buildings like the ones we saw on the TV show The Jetsons.</p>
-                    <p><em>(6)</em>Because the civil rights movement was in the news every day, both of us had started
-to take an interest in finding out more about our ethnic origins.</p>
-                    <p><em>(7)</em>“You know, we invented the yo-yo,” Norbert, who was part Filipino, bragged one day
-in my room. . . .</p>
-                    <p><em>(8)</em>Then I’d put on the latest jazz album by Sonny Rollins and say, “Yeah, but we invented
-that.”</p>
-                    <p><em>(9)</em>And back and forth we’d go, trying to one-up the other in a cultural heritage version
-of rock, paper, scissors. This kind of competition required that we do research. We even took the subway to the Metropolitan Museum of Art to find out more about Filipino and African cultures. Most important, I had a friend in whom I could confide any thought or feeling, knowing he would never make fun of me.</p>
-                    <p><em>(10)</em>The demands of high school cut into the time I could spend with Norbert. I had the
-studying part down, but the basketball part was as rocky as ever. As a freshman, my style of play reflected my personality: politely passive. I had some skills, but I didn’t have an aggressive nature. The good players around me knew how to play rough, use their bodies with authority, and power their way to a rebound. I felt like a pinball bouncing oﬀ players rather than making them bounce oﬀ me. I knew I had to toughen up, and I was committed to getting better, but it wasn’t happening fast enough. . . .</p>
-                    <p><em>(11)</em>On the morning our varsity team was scheduled to play a preconference game
-against Erasmus Hall High School in Brooklyn, Coach Donahue surprised me by taking me into his oﬃce. I figured he was going to discuss his disappointment in my progress as a player, maybe even say something about it all being a big mistake. That I didn’t belong. Instead, he handed me a varsity uniform.</p>
-                    <p><em>(12)</em>“You’ll be suiting up against Erasmus today,” he said.</p>
-                    <p><em>(13)</em>I just stood there, the folded uniform in my hand. Was this a joke?</p>
-                    <p><em>(14)</em>“Don’t you have a class to go to?” he asked. He pretended to be all business, but I
-could tell by the slight grin he was enjoying my dumbfounded reaction.</p>
-                    <p><em>(15)</em>When I unfolded the jersey, I saw the number 33—the one I had picked in seventh
-grade to honor the football player Mel Triplett. Even my fear of playing poorly and letting everyone down couldn’t overcome my pride at walking out of his oﬃce with that uniform. I had no idea that would be the number I would wear for the rest of my basketball career. I hurried away on a mission to tell anyone who would listen that I would be playing varsity that afternoon. All day, as I sat in classes and walked the hallways and ate lunch, I allowed myself to imagine the game and the parts where I scored impossible shots, made incredible passes, snagged rebounds like a machine. Would the team insist on carrying me out of the gym on their shoulders or just award me the game ball?</p>
-                    <p><em>(16)</em>Neither. We got slaughtered. Afterward, I sat in the locker room and cried.</p>
+                    <h2>Passage 1</h2>
+                    <p>{{PASSAGE_1_TEXT}}</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                 </div>
                 
                 <div class="highlights-list">
@@ -333,21 +290,9 @@ grade to honor the football player Mel Triplett. Even my fear of playing poorly 
             <!-- Part 2 Content -->
             <div class="part-content" id="part2-reading">
                 <div class="passage" id="passage2" data-passage="2">
-                    <h2>Excerpt from Inevitable and Only</h2>
-                    <p><em>(1)</em>When we stopped at the grocery store, Mom said she wanted comfort food,
-something warm and filling. I wished I knew how to make vegetarian paella and chocolate-dipped churros, the special treats my abuelita made for us whenever we visited Mom’s parents down in Florida. But that wasn’t what I was craving, anyhow. So I sent Mom to get flour and sugar while Josh and I filled the cart with cottage cheese, eggs, apples, and raisins. Ingredients for Cottage Cheese Contraption—one of the holdovers from our days at Ahimsa House. Everyone took turns cooking, so some nights we had gourmet Indian stir-fry or fancy Italian pasta dishes, and other nights we had unidentifiable casseroles made with cream of mushroom soup from a can.</p>
-                    <p><em>(2)</em>Or Cottage Cheese Contraption, invented by an old woman everyone called Granny.
-She’d been a housewife in Arkansas for fifty years, and when her husband died, she packed
-all her essential belongings into one suitcase, sold everything else, and took oﬀ on a road
-trip across the country. A year later, she landed in Takoma Park, at Ahimsa House. She’d
-lived there ever since, grandmothering every lost and lonely kid who came through.</p>
-                    <p><em>(3)</em>Josh was two when we left Ahimsa House, too young to remember anything about it. But he loved hearing stories about the people who lived there. About the days when Dad was a grad student in Renaissance literature and drama at Georgetown, when Mom served chai lattes at the Sunflower Café and played jazz piano at fancy DC nightclubs on the weekends. I’d shown Josh pictures of Mom in a tiny black dress at one of her gigs, a choker of pearls around her throat. She was unrecognizable, her eyes outlined in smoky makeup, her long hair loose down her back, a white rose tucked behind her ear. . . .</p>
-                    <p><em>(4)</em>When Josh was five, he discovered the cello. It happened at the Baltimore Symphony Orchestra. Mom was excited because it was an all-Haydn program—the “Farewell” Symphony and a cello concerto. Mom’s always said, Haydn is the underappreciated Einstein of the music world. Whenever she was upset or stressed in those days, she sat down at the piano and took out her big tattered book of Haydn sonatas, held together with a rubber band, loose pages sticking out everywhere. Now she hardly ever has time to play the piano, and all her music sits neatly stacked in milk crates along the wall.</p>
-                    <p><em>(5)</em>I remember the “Farewell” Symphony, how at the end the musicians all got up, one by one, switched oﬀ their stand lights, and walked oﬀ into the wings, until there were just two lonely violinists still playing by themselves. And I remember the cello soloist, his wild curly hair flopping all over the place like a lion’s mane while he played, the way he made the cello sound like it was singing. But mostly I remember Josh, sitting there with his lips parted, as if he were getting ready to take a bite of ice cream but forgot what he was doing and froze in place. When it was over and the cellist took his final bow and left the stage, Josh burst into tears and wailed, “Make the cello man come back!” Mom and Dad were shocked. Josh barely ever complained or whined or asked for anything. The next day, Mom signed him up for cello lessons at the Prep.</p>
-                    <p><em>(6)</em>Thinking about all this while I unpacked the Cottage Cheese Contraption ingredients on the kitchen counter, I had an idea. “Josh, why don’t you play me some cooking music?”</p>
-                    <p><em>(7)</em>Dad always used to tell me to play “cooking music” on my violin when I wanted to help him with dinner but was too young to be much use. I suspect it was also a sneaky way of getting me to practice, even for only ten or fifteen minutes. I never had the discipline Josh seemed to be born with.</p>
-                    <p><em>(8)</em>Josh had wilted a little when we walked into the empty house, but brightened up at my suggestion. He ran upstairs and came down slowly, carrying his cello with both hands, his rock stop1 slung over one shoulder. He settled himself on one of the chairs at the kitchen table and started playing movements from the Bach cello suites from memory.</p>
-                    <p><em>(9)</em>I cracked eggs, stirred cottage cheese and flour and sugar together, chopped apples, tossed in raisins, and fried it all into a delicious hot mush, while Josh “talked” to me. that’s how I thought of it—this was Josh’s way of saying the things he didn’t know how to express in words.</p>
+                    <h2>Passage 2</h2>
+                    <p>{{PASSAGE_2_TEXT}}</p>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
                 </div>
                 
                 <div class="highlights-list">
@@ -374,36 +319,35 @@ lived there ever since, grandmothering every lost and lonely kid who came throug
                     <h2>Passage 1 Questions</h2>
                     
                     <div class="question">
-                        <div class="question-text">1. What do the details in paragraphs 5 through 9 mainly reveal about Kareem?</div>
-                        <div class="option"><label><input type="radio" name="p1q1" value="A"> A. He wishes to visit more museums.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q1" value="B"> B. He prefers listening to jazz music.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q1" value="C"> C. He enjoys playing competitive games.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q1" value="D"> D. He desires to learn more about his heritage.</label></div>
+                        <div class="question-text">1. {{PASSAGE_1_Q1_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">2. Which quotation best represents the idea that the opinion of classmates can have a major eﬀect
-on teenagers?</div>
-                        <div class="option"><label><input type="radio" name="p1q2" value="A"> A. “Size implies maturity. Yes, I was the size of an adult (actually, bigger than most!), but I was still just a kid.” (paragraph 1)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q2" value="B"> B. “As a card-carrying Good Boy, I wanted to meet adults’ expectations and get their praise, but as a Regular Kid, I wanted to be like my peers and get their friendship. . . .”(paragraph 1)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q2" value="C"> C. “Weekends, I hung out with my only close friend left in the projects, Norbert.” (paragraph 5)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q2" value="D"> D. “And back and forth we’d go, trying to one-up the other in a cultural heritage version of rock, paper, scissors.” (paragraph 9)</label></div>
+                        <div class="question-text">2. {{PASSAGE_1_Q2_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">3. Which statement best describes the importance of Norbert in Kareem’s life?</div>
-                        <div class="option"><label><input type="radio" name="p1q3" value="A"> A. “We would shut ourselves in my room to play chess and talk about our plans for the future.” (paragraph 5)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q3" value="B"> B. “. . . both of us had started to take an interest in finding out more about our ethnic origins.” (paragraph 6)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q3" value="C"> C. “And back and forth we’d go, trying to one-up the other in a cultural heritage version of rock, paper, scissors.” (paragraph 9)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q3" value="D"> D. “. . . I had a friend in whom I could confide any thought or feeling, knowing he would never make fun of me.” (paragraph 9)</label></div>
+                        <div class="question-text">3. {{PASSAGE_1_Q3_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">4. In paragraph 10, what does Kareem mean when he says, “I didn’t have an aggressive nature”?</div>
-                        <div class="option"><label><input type="radio" name="p1q4" value="A"> A. He believes he needs to change the way he plays basketball.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q4" value="B"> B. He understands he may not be a strong player because of his age.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q4" value="C"> C. He discovers the other players know more ways to score in basketball.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q4" value="D"> D. He realizes he needs to practice more if he wants to improve as a player.</label></div>
+                        <div class="question-text">4. {{PASSAGE_1_Q4_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
@@ -415,26 +359,19 @@ on teenagers?</div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">6. What does paragraph 14 show about the relationship between Kareem and Coach Donahue?</div>
-                        <div class="option"><label><input type="radio" name="p1q6" value="A"> A. Kareem and Coach Donahue understand the importance of studying.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q6" value="B"> B. Kareem is beginning to understand and appreciate Coach Donahue’s personality.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q6" value="C"> C. Kareem is beginning to understand and appreciate Coach Donahue’s personality.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q6" value="D"> D. Kareem is worried that Coach Donahue is disappointed by his performance as a player.</label></div>
+                        <div class="question-text">6. {{PASSAGE_1_Q6_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">7. Which quotation best expresses a central idea in the article?</div>
-                        <div class="option"><label><input type="radio" name="p1q7" value="A"> A. "The scary thing about being so tall when you’re so young is that people automatically treat you as if you’re older.” (paragraph 1)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q7" value="B"> B. “My refuge from the explosive turmoil outside, and the implosive turmoil I had started to feel inside, was basketball.” (paragraph 4)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q8" value="C"> C. “We even took the subway to the Metropolitan Museum of Art to find out more about Filipino and African cultures.” (paragraph 9)</label></div>
-                        <div class="option"><label><input type="radio" name="p1q7" value="D"> “I hurried away on a mission to tell anyone who would listen that I would be playing varsity that afternoon.” (paragraph 15)</label></div>
-                    </div>
-                    <div class="question">
-                        <div class="question-text">7. How is Kareem and Norbert’s friendship developed in the articl?</div>
-                        <div class="option"><label><input type="radio" name="p1q8" value="A"> A. The authors describe the various interests that Kareem and Norbert have.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q8" value="B"> B. The authors use cause and eﬀect to describe how Kareem and Norbert became friends.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q8" value="C"> C. The authors present a problem Kareem and Norbert encounter and describe how they solve it.</label></div>
-                        <div class="option"><label><input type="radio" name="p1q8" value="D"> The authors compare and contrast the friendship of Kareem and Norbert to the friendships of other students.</label></div>
+                        <div class="question-text">7. {{PASSAGE_1_Q7_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                 </div>
             </div>
@@ -445,59 +382,59 @@ on teenagers?</div>
                     <h2>Passage 2 Questions</h2>
                     
                     <div class="question">
-                        <div class="question-text">9. How does the author best develop the narrator’s point of view in the story?</div>
-                        <div class="option"><label><input type="radio" name="p2q1" value="A"> A. by identifying the mother’s opinion about Haydn</label></div>
-                        <div class="option"><label><input type="radio" name="p2q1" value="B"> B. by describing the crates where the mother keeps her music</label></div>
-                        <div class="option"><label><input type="radio" name="p2q1" value="C"> C. by showing the value of music in the mother’s life</label></div>
-                        <div class="option"><label><input type="radio" name="p2q1" value="D"> D. by explaining the importance of the concert for the mother</label></div>
+                        <div class="question-text">8. {{PASSAGE_2_Q1_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">10. Which quotation shows a change in the direction of the story?</div>
-                        <div class="option"><label><input type="radio" name="p2q2" value="A"> A. “. . . she landed in Takoma Park, at Ahimsa House.” (paragraph 2)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q2" value="B"> B. “But he loved hearing stories about the people who lived there.” (paragraph 3)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q2" value="C"> C. “When Josh was five, he discovered the cello.” (paragraph 4)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q2" value="D"> D. “The next day, Mom signed him up for cello lessons . . . ” (paragraph 5)</label></div>
+                        <div class="question-text">9. {{PASSAGE_2_Q2_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">11. In paragraph 6, how does the narrator’s question to Josh aﬀect the resolution of the story?</div>
-                        <div class="option"><label><input type="radio" name="p2q3" value="A"> A. by giving Josh an opportunity to express his feelings</label></div>
-                        <div class="option"><label><input type="radio" name="p2q3" value="B"> B. by letting the narrator share a memory with her brother</label></div>
-                        <div class="option"><label><input type="radio" name="p2q3" value="C"> C. by revealing how Josh has grown in his ability to play the cello</label></div>
-                        <div class="option"><label><input type="radio" name="p2q3" value="D"> D. by allowing the narrator to make dinner while her brother is occupied</label></div>
+                        <div class="question-text">10. {{PASSAGE_2_Q3_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">12. In paragraph 8, the word “wilted” most likely means that Josh is</div>
-                        <div class="option"><label><input type="radio" name="p2q4" value="A"> A. confused</label></div>
-                        <div class="option"><label><input type="radio" name="p2q4" value="B"> B. frustrated</label></div>
-                        <div class="option"><label><input type="radio" name="p2q4" value="C"> C. sad</label></div>
-                        <div class="option"><label><input type="radio" name="p2q4" value="D"> D. tired</label></div>
+                        <div class="question-text">11. {{PASSAGE_2_Q4_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">13. People often use food as a way to create a sense of community. Which phrase from the story best supports this idea?</div>
-                        <div class="option"><label><input type="radio" name="p2q5" value="A"> A. “Everyone took turns cooking” (paragraph 1)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q5" value="B"> B. “Cottage Cheese Contraption, invented by an old woman” (paragraph 2)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q5" value="C"> C. “when Mom served chai lattes at the Sunflower Café” (paragraph 3)</label></div>
-                        <div class="option"><label><input type="radio" name="p2q5" value="D"> D. “fried it all into a delicious hot mush, while Josh ‘talked’ to me” (paragraph 9)</label></div>
+                        <div class="question-text">12. {{PASSAGE_2_Q5_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">14. In paragraph 9, why is the word “talked” in quotation marks?</div>
-                        <div class="option"><label><input type="radio" name="p2q6" value="A"> A. Josh does not wish to have a discussion with the narrator.</label></div>
-                        <div class="option"><label><input type="radio" name="p2q6" value="B"> B. Josh communicates with the narrator by using the cello as his voice.</label></div>
-                        <div class="option"><label><input type="radio" name="p2q6" value="C"> C. Josh only pretends to communicate with the narrator.</label></div>
-                        <div class="option"><label><input type="radio" name="p2q6" value="D"> D. Josh does not want the narrator to share his feelings with their mother.</label></div>
+                        <div class="question-text">13. {{PASSAGE_2_Q6_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                     
                     <div class="question">
-                        <div class="question-text">15. How does the author best develop the narrator’s point of view in the story?</div>
-                        <div class="option"><label><input type="radio" name="p2q7" value="A"> A. by sharing the narrator’s memories</label></div>
-                        <div class="option"><label><input type="radio" name="p2q7" value="B"> B. by describing the narrator’s opinions</label></div>
-                        <div class="option"><label><input type="radio" name="p2q7" value="C"> C. through the narrator’s reactions to events</label></div>
-                        <div class="option"><label><input type="radio" name="p2q7" value="D"> D. through the narrator’s dialogue</label></div>
+                        <div class="question-text">14. {{PASSAGE_2_Q7_TEXT}}</div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="A"> A. {{OPTION_A}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="B"> B. {{OPTION_B}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="C"> C. {{OPTION_C}}</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="D"> D. {{OPTION_D}}</label></div>
                     </div>
                 </div>
             </div>
