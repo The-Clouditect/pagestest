@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .reading-header {
+            padding: 30px 30px 0 30px;
+            background: #f9f9f9;
+        }
+        
+        .reading-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-top: 20px;
+        }
+        
+        .highlights-section {
+            height: 125px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f0f0f0;
+            border-top: 2px solid #333;
+        }
+        
+        .highlights-list {
+            margin-bottom: 20px;
+        }
+        
+        .highlights-list:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .questions-pane {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .questions-header-fixed {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 100;
+            padding: 30px 30px 0 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .questions-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+            cursor: text;
+            user-select: text;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .submit-section button {
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover:not(:disabled) {
+            background: #555;
+            border-color: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .pane {
+            padding-bottom: 100px;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .footnotes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="reading-header">
+                <div class="header">
+                    <h1>Reading Passage</h1>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
+                </div>
+            </div>
+            
+            <div class="reading-content">
+                <!-- ========== EDIT PASSAGE BELOW ========== -->
+                <div class="passage" id="passage1" data-passage="1">
+                    <h2>Excerpt from Becoming Kareem: Growing Up On and Oﬀ the Court</h2>
+                    <p><em>(1)</em>When I started high school, I was fourteen years old and six foot ten. The scary thing
+about being so tall when you're so young is that people automatically treat you as if you're
+older. Size implies maturity. Yes, I was the size of an adult (actually, bigger than most!), but
+I was still just a kid. And acting more like an adult wouldn't win me any friends. As a card-
+carrying1 Good Boy, I wanted to meet adults' expectations and get their praise, but as a
+Regular Kid, I wanted to be like my peers and get their friendship. . . .</p>
+                    <p><em>(2)</em>I walked into school that first day resplendent2 in my blue blazer and slacks, the
+school uniform. We all looked like baby-faced accountants in training. I noticed some of
+my old classmates from St. Jude, the ones who had turned their backs on me, and we
+continued our policy of actively ignoring one another. I felt the pain of their betrayal, but I
+forced my face to remain expressionless. I couldn't let them see that they had hurt me. I
+shoved the pain deep down into the coldest part of my heart. I was here to study hard at
+academics and to work hard at basketball under my new coach, Jack Donahue. I was here
+to excel. Nothing else mattered.</p>
+                    <p><em>(3)</em>I did excel. I made the honor roll my first semester, pleasing my parents and teachers.
+Learning came naturally to me. I loved reading, especially about history and adventure
+stories like The Theree Musketeers. Basketball, however, I had to work at to do well in. But
+the fierce competitor that had been awakened in me loved challenges. . . .</p>  
+                </div>
+                
+                <!-- ========== EDIT FOOTNOTES BELOW ========== -->
+                <div class="footnotes">
+                    <p>[1] card-carrying: A term meaning someone who is a committed or official member of a group.</p>
+                    <p>[2] resplendent: Having a splendid appearance; dazzling.</p>
+                </div>
+                <!-- ========== END EDITABLE SECTION ========== -->
+            </div>
+        
+        <!-- Highlights Section -->
+        <div class="highlights-section">
+            <div class="highlights-list">
+                <h3>Your Highlights:</h3>
+                <ul id="highlights-passage1"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Questions Pane -->
+    <div class="pane questions-pane">
+        <div class="questions-header-fixed">
+            <div class="header">
+                <h1>Questions</h1>
+            </div>
+            
+            <div class="student-id-section">
+                <label for="studentId"><strong>Student ID:</strong></label>
+                <input type="text" id="studentId" placeholder="Enter your ID" required>
+            </div>
+        </div>
+        
+        <div class="questions-content">
+            <!-- ========== EDIT QUESTIONS BELOW ========== -->
+            <!-- Use naming pattern: q1, q2, q3, etc. -->
+            <div class="question-set">
+                <h2>Passage Questions</h2>
+                
+                <div class="question">
+                    <div class="question-text">1. According to paragraph 1, what made Kareem's high school experience particularly challenging?</div>
+                    <div class="option"><label><input type="radio" name="q1" value="A"> A. He was much taller than his peers</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="B"> B. He had difficulty making friends</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="C"> C. He struggled with his coursework</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="D"> D. He wasn't good at basketball yet</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2. What can be inferred about Kareem's former classmates from St. Jude?</div>
+                    <div class="option"><label><input type="radio" name="q2" value="A"> A. They were happy to see him at the new school</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="B"> B. They had previously been his friends</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="C"> C. They were also on the basketball team</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="D"> D. They encouraged him to work harder</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3. According to the passage, which subject came naturally to Kareem?</div>
+                    <div class="option"><label><input type="radio" name="q3" value="A"> A. Basketball</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="B"> B. Social studies</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="C"> C. Academic studies</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="D"> D. Physical education</label></div>
+                </div>
+            </div>
+            <!-- ========== END EDITABLE SECTION ========== -->
+        </div>
+    </div>
+</div>
+    
+    <!-- Bottom Navigation -->
+    <div class="submit-section">
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script>
+        // Highlights storage
+        const highlights = {
+            passage1: []
+        };
+        
+        // Highlighting functionality
+        const passage = document.querySelector('.passage');
+        let highlightCounter = 0;
+        
+        passage.addEventListener('mouseup', function() {
+            const selection = window.getSelection();
+            let selectedText = selection.toString().trim();
+            
+            if (selectedText.length > 0) {
+                const passageId = this.id;
+                const range = selection.getRangeAt(0);
+                
+                // Paragraph boundary truncation
+                const startP = range.startContainer.nodeType === 3 ? 
+                    range.startContainer.parentElement.closest('p') : 
+                    range.startContainer.closest('p');
+                const endP = range.endContainer.nodeType === 3 ? 
+                    range.endContainer.parentElement.closest('p') : 
+                    range.endContainer.closest('p');
+                
+                if (startP !== endP) {
+                    range.setEndAfter(startP.lastChild);
+                    selectedText = range.toString().trim();
+                }
+                
+                highlightCounter++;
+                const highlightId = 'highlight-' + highlightCounter;
+                
+                // Visual feedback
+                let highlightElements = [];
+                try {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    span.setAttribute('data-highlight-id', highlightId);
+                    
+                    const contents = range.extractContents();
+                    span.appendChild(contents);
+                    range.insertNode(span);
+                    
+                    highlightElements.push(span);
+                } catch (e) {
+                    // Highlighting failed
+                }
+                
+                // Store highlight
+                highlights[passageId].push({
+                    text: selectedText,
+                    id: highlightId,
+                    elements: highlightElements
+                });
+                
+                updateHighlightsList(passageId);
+                selection.removeAllRanges();
+            }
+        });
+        
+        // Update highlights list
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((highlight, index) => {
+                    const li = document.createElement('li');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        const currentIndex = highlights[passageId].findIndex(h => h.id === highlight.id);
+                        
+                        if (currentIndex === -1) {
+                            return;
+                        }
+                        
+                        const highlightToRemove = highlights[passageId][currentIndex];
+                        
+                        highlightToRemove.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        highlights[passageId].splice(currentIndex, 1);
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize
+        updateHighlightsList('passage1');
+        
+        // Dynamically detect all questions
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate label from question name
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/q(\d+)/);
+            if (match) {
+                return `Question ${match[1]}`;
+            }
+            return questionName;
+        }
+        
+        // CSV generation
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        function downloadCSV(studentId, answers, annotations) {
+            const annotationTexts = annotations.map(h => h.text);
+            const annotationsJSON = JSON.stringify(annotationTexts);
+            
+            const questionNames = getAllQuestionNames();
+            
+            const row = [
+                studentId,
+                annotationsJSON,
+                ...questionNames.map(name => answers[name] || '')
+            ];
+            
+            const csvContent = row.map(escapeCSV).join(',');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            const questionNames = getAllQuestionNames();
+            const answers = {};
+            let missingQuestions = [];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
+            });
+            
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                downloadCSV(studentId, answers, highlights.passage1);
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
