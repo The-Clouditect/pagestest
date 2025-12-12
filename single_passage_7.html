@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .reading-header {
+            padding: 30px 30px 0 30px;
+            background: #f9f9f9;
+        }
+        
+        .reading-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-top: 20px;
+        }
+        
+        .highlights-section {
+            height: 125px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f0f0f0;
+            border-top: 2px solid #333;
+        }
+        
+        .highlights-list {
+            margin-bottom: 20px;
+        }
+        
+        .highlights-list:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .questions-pane {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .questions-header-fixed {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 100;
+            padding: 30px 30px 0 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .questions-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+            cursor: text;
+            user-select: text;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .submit-section button {
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover:not(:disabled) {
+            background: #555;
+            border-color: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .pane {
+            padding-bottom: 100px;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .footnotes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="reading-header">
+                <div class="header">
+                    <h1>Reading Passage</h1>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
+                </div>
+            </div>
+            
+            <div class="reading-content">
+                <!-- ========== EDIT PASSAGE BELOW ========== -->
+                <div class="passage" id="passage1" data-passage="1">
+                    <h2></h2>
+                    <h3><em>Folktale told by Josepha Sherman</em></h3>
+                    <p><em>(1)</em>One day, a hungry man named Goha was walking in the marketplace, his mind on the dinner to come, when he chanced to pass a butcher’s shop. There, hanging right in front of Goha’seyes, were two nice, meaty calf legs, every bit as tasty-looking to him as a good leg of lamb might be. He grew more hungry with every moment of looking, and at last bought them and scurried [1] home.</p>
+                    <p><em>(2)</em>“Wife, come, cook these as quickly as you can, and I’ll go back to the market and buy some rice to go with them.”</p>
+                    <p><em>(3)</em>The calf legs cooked quickly indeed, and when Goha’s wife took the lid off the pot, she saw that they were done wonderfully well—so wonderfully well that the smell of them was sweeter to her than any rose.</p>
+                    <p><em>(4)</em>“I’d better taste one,” she told herself. “Just to be sure they’re done, of course. Just a taste.”</p>
+                    <p><em>(5)</em>Ah, but the meat was tender and perfectly cooked. She took a second taste, a third. And suddenly there was nothing more to taste. She had eaten the entire calf’s leg! The wife worried, “I can’t tell Goha how greedy I was! But what am I to tell him?”</p>
+                    <p><em>(6)</em>Just then Goha returned. “I have the rice here, wife. Come, bring the calf’s legs, and let us eat!”</p>
+                    <p><em>(7)</em>To his surprise, the dish his wife brought from the kitchen held one leg, and one leg alone. “Where is the second leg?” Goha asked.</p>
+                    <p><em>(8)</em>“What second leg?” his wife replied. “Here is the only one!”</p>
+                    <p><em>(9)</em>“There were two legs!”</p> 
+                    <p><em>(10)</em>“There is only one!”</p>
+                    <p><em>(11)</em>“There were two!”</p>
+                    <p><em>(12)</em>“One!”</p> 
+                    <p><em>(13)</em>“Two!”</p>
+                    <p><em>(14)</em>“One!”</p>
+                    <p><em>(15)</em>So there they were, arguing so loudly it frightened the pigeons off the roof. “I will prove to you that there were two legs!” Goha shrieked. “I’ll win this argument even if it means my very life!”</p>
+                    <p><em>(16)</em>“There was one leg!” his wife shrieked back. “One leg!”</p>
+                    <p><em>(17)</em>“There were two!” Goha shouted. But in the next moment, he clutched at his chest, gasping, “My heart, oh, my heart . . .”</p>
+                    <p><em>(18)</em>With that, Goha fell to the floor and pretended to be dead. His wife at first thought this must surely be another of her husband’s tricks. But when he remained so very still, she burst into tears and called the undertaker. Goha was carried from his house with great care. The funeral procession[2] wound its slow, dignified[3] way through the marketplace on its way to the cemetery, and everyone came running to see if the great and tricky Goha was, indeed, finally dead.</p> 
+                    <p><em>(19)</em>At last the procession passed the butcher shop. The butcher came out to see who had died, but by now such a crowd had gathered that he could see nothing.</p>
+                    <p><em>(20)</em>“Who has died?” he asked loudly.</p>
+                    <p><em>(21)</em>“Goha,” came the answer from several mouths.</p>
+                    <p><em>(22)</em>“Goha!” the butcher exclaimed. “But how can he be dead? He only just bought a pair of calf legs from me!”</p>
+                    <p><em>(23)</em>On hearing this, Goha sat bolt upright[4]. “You see?” he cried to his wife in triumph. “There were two legs. I win our argument!”</p>
+                </div>
+                
+                <!-- ========== EDIT FOOTNOTES BELOW ========== -->
+                <div class="footnotes">
+                    <p>[1] scurried: v. To scurry means to hurry along with light footsteps.  </p>
+                    <p>[2] procession: n. In a procession, people or things move along in an orderly and serious way.  </p>
+                    <p>[3] dignified: adj. Someone or something that is dignified has or shows honor and respect.  </p>
+                    <p>[4] upright: adv. Someone or something that sits or stands upright is in a strictly vertical position.</p>
+                </div>
+                <!-- ========== END EDITABLE SECTION ========== -->
+            </div>
+        
+        <!-- Highlights Section -->
+        <div class="highlights-section">
+            <div class="highlights-list">
+                <h3>Your Highlights:</h3>
+                <ul id="highlights-passage1"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Questions Pane -->
+    <div class="pane questions-pane">
+        <div class="questions-header-fixed">
+            <div class="header">
+                <h1>Questions</h1>
+            </div>
+            
+            <div class="student-id-section">
+                <label for="studentId"><strong>Student ID:</strong></label>
+                <input type="text" id="studentId" placeholder="Enter your ID" required>
+            </div>
+        </div>
+        
+        <div class="questions-content">
+            <!-- ========== EDIT QUESTIONS BELOW ========== -->
+            <!-- Use naming pattern: q1, q2, q3, etc. -->
+            <div class="question-set">
+                <h2>Passage Questions</h2>
+                
+                <div class="question">
+                    <div class="question-text">1. Which statement best describes the characteristics that make this story a folktale?</div>
+                    <div class="option"><label><input type="radio" name="q1" value="A"> A. Which statement best describes the characteristics that make this story a folktale?</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="B"> B. It is the traditional story of a man named Goha, who is a trickster character.</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="C"> C. It is the ancient story of a man named Goha, and it explains the traditions of his people.</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="D"> D. It is the fictional story of a man named Goha, and it is set in the past.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2. </div>
+                    <div class="option"><label><input type="radio" name="q2" value="A"> A. </label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="B"> B. </label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="C"> C. </label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="D"> D. </label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3. What lesson does this folktale teach?</div>
+                    <div class="option"><label><input type="radio" name="q3" value="A"> A. Wives should always cook for their husband.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="B"> B. People should never play tricks on each other.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="C"> C. People should be honest with each other.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="D"> D. Married couples should never fight.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">4. In paragraph 3, what does the phrase <em>the smell of them was sweeter to her than any rose</em> help the reader understand?</div>
+                    <div class="option"><label><input type="radio" name="q4" value="A"> A. How hungry Goha’s wife becomes when she thinks about roses</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="B"> B. How rare it is for Goha’s wife to receive meat</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="C"> C. How much Goha’s wife loves the smell of roses</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="D"> D. How tempting the smell of the meat is to Goha’s wife</label></div>
+                </div>
+                <!-- ========== SAMPLE NEW QUESTION ========== -->
+                <!-- Editor notes: Copy the whole div from <div class="question"> through the closing </div> THEN make sure THIS part has the next numeric ID: name="q4" IE) the next block woudld be name="q5"-->
+                <div class="question">
+                    <div class="question-text">5. Which detail from the story helps the reader infer that Goha’s wife cares for him and his opinion, despite their loud argument?</div>
+                    <div class="option"><label><input type="radio" name="q5" value="A"> A. She thinks he is tricking her when he falls to the floor.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="B"> B. She tastes the food.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="C"> C. She tries to convince him that there was only one leg.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="D"> D. She bursts into tears when he pretends to be is dead.</label></div>
+                </div>
+                <div class="question">
+                    <div class="question-text">6. How does having less details about the setting help the reader?</div>
+                    <div class="option"><label><input type="radio" name="q6" value="A"> A. Readers can compare the setting to the plot and theme</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="B"> B. Readers can focus on the words and actions of the characters</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="C"> C. Readers can read to the end of the story more quickly</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="D"> D. Readers can understand how simple the house is</label></div>
+                </div>
+                <div class="question">
+                    <div class="question-text">7. Which sentence best explains what makes the story funny?</div>
+                    <div class="option"><label><input type="radio" name="q7" value="A"> A. It is surprising what Goha will do to win an argument.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="B"> B. It is unexpected that Goha’s wife is the one who tries to play a trick.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="C"> C. The characters’ hunger is exaggerated throughout the story.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="D"> D. The characters tell each other jokes throughout the story.</label></div>
+                </div>
+            <div class="question">
+                    <div class="question-text">8. Based on the events in the folktale, what value do you think is important for the culture where this folktale is from?</div>
+                    <div class="option"><label><input type="radio" name="q8" value="A"> A. Acting nice</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="B"> B. Saving money</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="C"> C. Being honest</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="D"> D. Cooking well</label></div>
+                </div>
+                
+            </div>
+            <!-- ========== END EDITABLE SECTION ========== -->
+        </div>
+    </div>
+</div>
+    
+    <!-- Bottom Navigation -->
+    <div class="submit-section">
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script>
+        // Highlights storage
+        const highlights = {
+            passage1: []
+        };
+        
+        // Highlighting functionality
+        const passage = document.querySelector('.passage');
+        let highlightCounter = 0;
+        
+        passage.addEventListener('mouseup', function() {
+            const selection = window.getSelection();
+            let selectedText = selection.toString().trim();
+            
+            if (selectedText.length > 0) {
+                const passageId = this.id;
+                const range = selection.getRangeAt(0);
+                
+                // Paragraph boundary truncation
+                const startP = range.startContainer.nodeType === 3 ? 
+                    range.startContainer.parentElement.closest('p') : 
+                    range.startContainer.closest('p');
+                const endP = range.endContainer.nodeType === 3 ? 
+                    range.endContainer.parentElement.closest('p') : 
+                    range.endContainer.closest('p');
+                
+                if (startP !== endP) {
+                    range.setEndAfter(startP.lastChild);
+                    selectedText = range.toString().trim();
+                }
+                
+                highlightCounter++;
+                const highlightId = 'highlight-' + highlightCounter;
+                
+                // Visual feedback
+                let highlightElements = [];
+                try {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    span.setAttribute('data-highlight-id', highlightId);
+                    
+                    const contents = range.extractContents();
+                    span.appendChild(contents);
+                    range.insertNode(span);
+                    
+                    highlightElements.push(span);
+                } catch (e) {
+                    // Highlighting failed
+                }
+                
+                // Store highlight
+                highlights[passageId].push({
+                    text: selectedText,
+                    id: highlightId,
+                    elements: highlightElements
+                });
+                
+                updateHighlightsList(passageId);
+                selection.removeAllRanges();
+            }
+        });
+        
+        // Update highlights list
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((highlight, index) => {
+                    const li = document.createElement('li');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        const currentIndex = highlights[passageId].findIndex(h => h.id === highlight.id);
+                        
+                        if (currentIndex === -1) {
+                            return;
+                        }
+                        
+                        const highlightToRemove = highlights[passageId][currentIndex];
+                        
+                        highlightToRemove.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        highlights[passageId].splice(currentIndex, 1);
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize
+        updateHighlightsList('passage1');
+        
+        // Dynamically detect all questions
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate label from question name
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/q(\d+)/);
+            if (match) {
+                return `Question ${match[1]}`;
+            }
+            return questionName;
+        }
+        
+        // CSV generation
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        function downloadCSV(studentId, answers, annotations) {
+            const annotationTexts = annotations.map(h => h.text);
+            const annotationsJSON = JSON.stringify(annotationTexts);
+            
+            const questionNames = getAllQuestionNames();
+            
+            const row = [
+                studentId,
+                annotationsJSON,
+                ...questionNames.map(name => answers[name] || '')
+            ];
+            
+            const csvContent = row.map(escapeCSV).join(',');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            const questionNames = getAllQuestionNames();
+            const answers = {};
+            let missingQuestions = [];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
+            });
+            
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                downloadCSV(studentId, answers, highlights.passage1);
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

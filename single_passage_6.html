@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .reading-header {
+            padding: 30px 30px 0 30px;
+            background: #f9f9f9;
+        }
+        
+        .reading-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-top: 20px;
+        }
+        
+        .highlights-section {
+            height: 125px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f0f0f0;
+            border-top: 2px solid #333;
+        }
+        
+        .highlights-list {
+            margin-bottom: 20px;
+        }
+        
+        .highlights-list:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .questions-pane {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .questions-header-fixed {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 100;
+            padding: 30px 30px 0 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .questions-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+            cursor: text;
+            user-select: text;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .submit-section button {
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover:not(:disabled) {
+            background: #555;
+            border-color: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .pane {
+            padding-bottom: 100px;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .footnotes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="reading-header">
+                <div class="header">
+                    <h1>Reading Passage</h1>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
+                </div>
+            </div>
+            
+            <div class="reading-content">
+                <!-- ========== EDIT PASSAGE BELOW ========== -->
+                <div class="passage" id="passage1" data-passage="1">
+                    <h2>My New American Life</h2>
+                    <h3><em>short story by Daniel Aleman</em>
+                    <p><em>(1)</em>I’ve heard people say that change comes when you least expect it. In the case of my family, that’s not exactly true. We were expecting change for a very long time before it actually came.</p>
+                    <p><em>(2)</em>Pa has talked about moving to the United States since I was little. He used to tell me stories about it—stories about beaches, and cities, and snowy mountains, and wide-open spaces. Most importantly, though, he’d tell stories about how different our lives would be once we left Mexico.</p>
+                    <p><em>(3)</em>Up until about a couple months ago, it all felt like a dream that existed only inside Pa’s mind and nothing more, but then he received a call saying he’d gotten a job offer, and all the changes we’d been waiting for started happening all at once. We packed up all our things, hopped on a plane to New York, and now we’re here: in a new apartment, in a new city, in a new country.</p>
+                    <p><em>(4)</em>Whenever people ask me how I feel about all the change, I never really know what to say. “Excited,” I answer most of the time. Or “happy.” But there always seems to be a question mark at the end of my answers. Excited? Happy?</p> 
+                    <p><em>(5)</em>The truth is, I don’t know how I feel—or I didn’t know, I should say, up until today: my first day at an American high school.</p> 
+                    <p><em>(6)</em>“¿Carlos?” Ma asks while we’re sitting around the breakfast table. “¿Cómo te sientes?”</p> 
+                    <p><em>(7)</em>“Huh?”</p> 
+                    <p><em>(8)</em>“You’re so quiet, mijo,” she says. “Are you okay?”</p> 
+                    <p><em>(9)</em>“Uh, yeah,” I answer. “I’m just a bit nervous.”</p> 
+                    <p><em>(10)</em>“You shouldn’t be,” Pa says before drinking a sip of coffee from his mug. He and I look a lot alike—broad shoulders, black hair, brown eyes, and even the same long legs. The only big difference between us is how we see the world. He’s always been an optimist[1], always liked to look at the bright side of things, whereas I am more like my mom: a bit more realistic—a bit more grounded when it comes to my expectations.</p> 
+                    <p><em>(11)</em>“We should get going soon,” Ma says, sneaking a glance up at the clock on the wall. “You won’t want to be late.”</p>
+                    <p><em>(12)</em>The three of us rush out the door and down the stairs of our building. Once we’re out on the street, Pa turns left so he can head to the subway station, while Ma and I turn right. She insisted on walking with me to the bus stop, even when I told her I didn’t mind catching the bus on my own.</p>
+                    <p><em>(13)</em>“Have a great day, mijo,” she says to me right before I get on it.</p>
+                    <p><em>(14)</em>The ride doesn’t take too long. Before I know it, the bus has stopped in front of a big, imposing[2] building made of red brick—my new school—and I hop off feeling even more nervous than I did during breakfast. As I walk toward the main entrance, I notice how all the kids around me are talking with each other, and I tell myself that I could end up being friends with any of them. I’ll go in there, meet new people, and by the end of the day, all this uncertainty and nervousness will have vanished.</p> 
+                    <p><em>(15)</em>My first class of the day is Social Studies. I have no idea what that means, since I didn’t have any classes with the same name back in Mexico, but I do know one thing: The word social is the same in English and in Spanish, and social is exactly what I need to be today, so this shouldn’t be a bad place to start.</p> 
+                    <p><em>(16)</em>“Settle down, everybody,” the teacher—Mr. Anderson, according to a plaque on his desk—says. “We have a new student with us today. Carlos recently moved here from Mexico City, so I hope you’ll all make him feel welcome.”</p> 
+                    <p><em>(17)</em>Suddenly, two dozen necks turn in my direction, and everybody stares at me. I can feel my face turning red, but I can’t bring myself to say anything other than an awkward, “Hello,” before they all turn back toward the front of the room.</p> 
+                    <p><em>(18)</em>“Now, I hope all of you have done the reading I assigned for homework yesterday. If you’ll please turn your textbooks to page seventy-four, we can begin.”</p> 
+                    <p><em>(19)</em>I dive into my backpack quickly, trying to spot the book that says “Social Studies” along the spine. I open it and turn to the right page, but none of the text makes any sense. I’m not used to reading in English, so I’m left trying to make sense of the few words I recognize: important, decision, global. In the end, no matter how hard I try to keep up with class, it turns out to be nearly impossible. Everyone told me it would be hard to start school midyear, but no one warned me just how hard it would be to learn all my subjects in a different language.</p> 
+                    <p><em>(20)</em>My second class of the day is English, which doesn’t go much better than the first, but at least I have Math right after, which I’m happy about. Numbers are the same in English and Spanish, so there’s hardly any room for confusion there.</p> 
+                    <p><em>(21)</em>By the time I head to the cafeteria, I feel exhausted. It’s like my brain has been working in overdrive, and all I really feel like doing is taking a nap, but I also know that lunch will be the single most important period of the day—my best chance at making new friends. So I put one foot in front of the other, get in line for food, and then turn around to face all the tables.</p>
+                    <p><em>(22)</em>That’s when I realize it: finding a table to sit at will be a lot harder than I thought. There are kids moving all around the cafeteria, speaking in loud voices, but no one seems to be looking my way. I guess I could walk up to any of the tables and ask if I can join, but . . . what if I choose the wrong one? What if the answer is no?</p>
+                    <p><em>(23)</em>I end up carrying my food to an empty classroom. And while I eat, listening to the far-off sound of voices coming from the cafeteria, I can’t help but think that this is all very different from what I’d wished it would be. I am very different from who I thought I’d become once we moved to America. I used to be loud, and talkative, and sometimes even funny—so, when I dreamed of my life in New York, I pictured myself having lots of friends, just like I did in Mexico City. I definitely didn’t plan to be here, having lunch all alone and wishing for the final bell to ring. I’m only halfway through the day, and already I can’t wait for it to be over.</p>
+                    <p><em>(24)</em>“¿Qué tal estuvo tu día?” Ma says when I meet her at the bus stop a few hours later. She’s asking how my day went, and there’s a hopeful look on her face as she waits for my response.</p> 
+                    <p><em>(25)</em>“It was fine,” I answer, trying not to sound too happy or too upset. The last thing I want is to disappoint her, but I also don’t want her to get the wrong idea.</p> 
+                    <p><em>(26)</em>“Did you make any friends?”</p> 
+                    <p><em>(27)</em>“Not really.”</p> 
+                    <p><em>(28)</em>We start walking back home, but as we pass by all the shops, cars, and people that breathe life into our neighborhood, I see only my old city—bright purple jacaranda trees along the sides of the road, and sunny skies, and food stands around every corner. I think about my old friends and the extended family we left behind—my abuela, and tías, and tíos, and primos—and how far away they all are.</p> 
+                    <p><em>(29)</em>“Ay, where is this cold wind coming from?” Ma says all of a sudden, wrapping her sweater tighter around herself. “It’s March! Shouldn’t spring be here already?”</p> 
+                    <p><em>(30)</em>I only shrug in response. Back in Mexico City, I bet flowers are already in full bloom. I bet it’s warm and sunny—shorts and T-shirt weather, most likely, but not in New York. I’ve heard some people say it doesn’t get warm in this part of the world until April or May, which feels a little extreme. Winter here is very different from what we’re used to.</p> 
+                    <p><em>(31)</em>“¿Tienes tarea, mijo?” Ma asks once we’re back inside the warmth of the apartment.</p>
+                    <p><em>(32)</em>“I—I do have homework, yeah,” I answer. What I don’t want to admit is that I have no idea how to even get started on it. I wrote down some instructions in a notebook, but I’m not really sure I understand what needs to be done, and I don’t think Ma will be able to help much. Her English is much more limited than mine.</p>
+                    <p><em>(33)</em>“Why don’t you get started, then?” she says to me. “I’ll let you know when dinner is ready.”</p>
+                    <p><em>(34)</em>I head to my room, but all I can think about is that even dinnertime hasn’t been the same lately. Although Ma tries to make the same dishes she used to make back home, they just aren’t the same. There’s a word we use in Mexico to describe our food: sazón—and any given dish can have either good sazón or bad sazón. The word literally[3] translates to “seasoning,” but it means so much more than that. It has to do with the quality of the ingredients, and the skill of the cook, and even the amount of passion with which the food is prepared. I’m not sure why, but the sazón in my mom’s cooking has changed since we moved to New York. Maybe it’s because she’s also trying to find her way in our new city. Or maybe the ingredients she finds at the grocery store here just aren’t the same as what we used to get back in Mexico.</p> 
+                    <p><em>(35)</em>Sitting around the table eating arroz and tacos de pollo, Pa stares at me through his glasses. Since he started his new job, he’s been working long hours. Some mornings, he has to head to the office before I’ve even woken up, but he always makes sure to be home in time for dinner.</p> 
+                    <p><em>(36)</em>“How was your first day of school?” he asks.</p> 
+                    <p><em>(37)</em>Exhaling, I reply, “It was tough.”</p> 
+                    <p><em>(38)</em>I tell them everything—about my classes, about how hard it was to meet new people, and even about the way I’ve been missing home all day.</p> 
+                    <p><em>(39)</em>“The thing is, Carlos,” Ma says, “this is home.”</p> 
+                    <p><em>(40)</em>Pa nods slowly. “That’s true.”</p> 
+                    <p><em>(41)</em>“It just . . . doesn’t feel like it.”</p>
+                    <p><em>(42)</em>“But it will. You just have to be patient,” Pa says. “Toma todo un día a la vez, mijo.”</p>
+                    <p><em>(43)</em>My mom nods quickly. “Your pa is right—take everything one day at a time, and before you know it, it’ll all be much better.”</p>
+                    <p><em>(44)</em>I press my lips together. I wish I could tell them that it won’t be as easy as that, but I suppose there’s no point in arguing. Nodding slowly, I pick up my fork again, and we all go back to eating.</p> 
+                    <p><em>(45)</em>Over the next few weeks at school, I try my best to listen to my parents’ advice. Today is just another day, I tell myself constantly as I walk through the busy hallways. Another day of many. Those words make my heart feel lighter, my shoulders more relaxed—even my classes seem easier and the people that surround me a lot friendlier.</p> 
+                    <p><em>(46)</em>I’ve started to recognize the names of some of my classmates. There’s Alexis, for example, a girl in my Social Studies class who always knows the right answer whenever Mr. Anderson asks a question. There’s also Henry, a kid who seems to love wearing baseball hats, and Charlie, a skinny boy in Math who smiles at me every time we bump into each other. I’ve never spoken to any of these people, but there’s something about the familiarity of their faces that somehow makes me feel less alone.</p> 
+                    <p><em>(47)</em>It’s on a Thursday in late March that something unexpected happens. We’re all packing our bags at the end of Math class when Charlie gets out of his seat, and his phone slips out of his pocket, falling on the floor with a loud thud.</p> 
+                    <p><em>(48)</em>Before either of us can reach for it, Joe Miller—a blond guy whose big headphones seem to be permanently on his neck—wraps his hand around it.</p> 
+                    <p><em>(49)</em>“Dropped something, did you?” he says, staring at Charlie with a mocking grin on his face. “Now you’re gonna have to find a way to get it back.”</p> 
+                    <p><em>(50)</em>Charlie doesn’t answer. He remains frozen, staring at Joe through his thick glasses. I can’t say I haven’t noticed this before—the way Joe seems to enjoy going after people—but up until now, I’ve tried to stay away from any conflict. Today, though, I just can’t help myself. Watching Joe holding up Charlie’s phone makes my blood boil, so I push my chair back quickly and walk up to them.</p> 
+                    <p><em>(51)</em>“I can take that from you,” I say to Joe.</p>
+                    <p><em>(52)</em>For a moment, he doesn’t seem to know what to say. I am much taller and bigger than he is, so he’s probably weighing his options—between trying to make a run for it or just backing off and surrendering the phone.</p>
+                    <p><em>(53)</em>“Whatever,” Joe says in the end, opening his palm. I take the phone, and he shrugs into his hood as he exits the classroom.</p>
+                    <p><em>(54)</em>“Wow,” Charlie says beside me. “That was awesome.”</p> 
+                    <p><em>(55)</em>“Here you go,” I reply.</p> 
+                    <p><em>(56)</em>“Thank you. I . . . I’m Charlie, by the way. Well—Charles, really, but everyone calls me Charlie.”</p> 
+                    <p><em>(57)</em>“It’s funny,” I say. “We have the same name—only in different languages. Carlos and Charles.”</p> 
+                    <p><em>(58)</em>Charlie’s smile widens. “Maybe we’re meant to be friends, then.”</p> 
+                    <p><em>(59)</em>I close my bag, swing it over my shoulder, and then we make our way to the cafeteria together. The moment we enter, I realize that this place feels much less intimidating now that I’m not all by myself. Charlie and I get food, and then he leads the way toward a table near the windows, where a few people are already sitting.</p> 
+                    <p><em>(60)</em>“Everyone, this is Carlos,” Charlie announces to the table.</p> 
+                    <p><em>(61)</em>Things get loud as they all smile and speak at the same time. I’m pretty sure some of them are sharing their names, but I find it hard to make out much through all the noise.</p>
+                    <p><em>(62)</em>“Carlos just moved here from Mexico,” Charlie says as we both sit down.</p>
+                    <p><em>(63)</em>“Mexico?” says a girl who’s sitting right across from us. She has shiny black hair and is wearing a bright purple shirt. “Where exactly are you from?”</p>
+                    <p><em>(64)</em>“Mexico City,” I reply.</p> 
+                    <p><em>(65)</em>“Oh, my whole family’s from Monterrey!” she says, leaning closer to me. “I moved here when I was seven. I’m Clara, by the way.”</p> 
+                    <p><em>(66)</em>“Nice to meet you, Clara. I—”</p> 
+                    <p><em>(67)</em>“How long ago did you come to New York?” another kid asks me before I can even complete my sentence. I could be wrong, but I think I heard him say his name is Ethan.</p> 
+                    <p><em>(68)</em>“A couple of weeks ago,” I answer. “Everything’s still pretty new.”</p> 
+                    <p><em>(69)</em>“You’ll be used to it in no time,” he tells me. “I moved here from California a few months ago.”</p> 
+                    <p><em>(70)</em>“And do you like it here?”</p> 
+                    <p><em>(71)</em>“Oh, definitely,” he says. Sneaking a glance at everyone around us, he smiles from the corner of his mouth. “It helps to have good friends.”</p>
+                    <p><em>(72)</em>It doesn’t take me long to learn the names of everybody else at the table. Jess and Jen are twin sisters, and they are obsessed[4] with a band from Long Island that I’ve never heard of before. There’s also Asha, who tells me that her family came here from India a couple of years ago, and Oscar, who tells us all about the trip he’s going on during spring break, since he’s going up to Quebec to visit his mom’s side of the family.</p>
+                    <p><em>(73)</em>Maybe I’m not as much of an outsider as I thought I was. It doesn’t take me long to realize that almost everyone here also knows what it’s like to have their lives or their families divided between two different places. Some of them have also moved to a new city and started at a new school, yet here they all are, smiling and laughing and just being friends. The thought brings me hope, because maybe I’ll be doing those same things alongside them soon. Perhaps it’s true that this cafeteria table, and this school, and this new life will start feeling like home before I know it, just as my parents said.</p>
+                    <p><em>(74)</em>“How was your day?” Ma asks me when I get home. She’s been asking me the same question for weeks, and I’ve been unable to reply with much more than a shrug.</p> 
+                    <p><em>(75)</em>Today, however, I manage to give her a small smile. “Better.”</p> 
+                    <p><em>(76)</em>She doesn’t say anything. She just gives me a smile in return.</p> 
+                    <p><em>(77)</em>I’m not sure exactly how it happens, but the weeks start to go quicker, and soon enough a full month has passed. The flowers bloom, the temperature gets warmer, and before I know it, life feels . . . normal, somehow.</p> 
+                    <p><em>(78)</em>I wake up on a Monday in mid-April feeling calm and well-rested. I’ve gotten used to being a bit disoriented right after I open my eyes every morning. I tend to find myself expecting to be inside my old bedroom in Mexico, and when I realize that I’m not, there are always a few seconds during which I have to remind myself where I am and why I’m here. This morning, though, everything around me seems familiar—the light-blue walls of my new bedroom, the thin curtains at the window, the chirping birds outside.</p> 
+                    <p><em>(79)</em>“How did you sleep?” Ma asks me when I come sit at the table for breakfast. Pa is already at the office, so today it’s just me and her.</p> 
+                    <p><em>(80)</em>“Great, actually,” I reply, stretching my arms a little.</p> 
+                    <p><em>(81)</em>“I’m glad to hear that,” she says, reaching for her glass of orange juice. “Now, eat as fast as you can. You’ll need to head out soon if you want to make it to class on time.”</p>
+                    <p><em>(82)</em>When I get to school, things feel different too. For the first time, I don’t think about my former school back in Mexico, or all my old friends, or about the loud voices that surround me as I make my way down the corridors. I focus only on getting to class, and nothing more.</p>
+                    <p><em>(83)</em>I’ve been finding it a lot easier to pay attention to my teachers lately, which I suspect might have something to do with the fact that I’m getting used to hearing them speak in English. These days, the language doesn’t sound nearly as confusing as it did when I first started. Though, of course, there are exceptions—like today, during Math class, when Ms. Jones calls on me for an answer, and I have no idea what she said or what I’m even supposed to do. Sometimes, words still have a way of sounding like a jumbled mess to me.</p>
+                    <p><em>(84)</em>“Uh . . . could you repeat the question, please?” I ask. Barely weeks ago, I would’ve had no idea what to do in this moment—I would’ve probably frozen in my seat, but I’ve found myself getting better at dealing with these situations.</p> 
+                    <p><em>(85)</em>“Of course,” Ms. Jones says. When she asks the question again, I watch her lips closely to make sure I’m not missing a single word.</p> 
+                    <p><em>(86)</em>“Thirty-seven?” I answer, filled with doubt.</p> 
+                    <p><em>(87)</em>“Thirty-seven is correct!”</p> 
+                    <p><em>(88)</em>I head to lunch feeling victorious. By the time I join the table, everyone’s there already—Charlie, Clara, Ethan, Jess, Jen, Asha, and Oscar—and they’ve saved a seat for me, like I knew they would.</p> 
+                    <p><em>(89)</em>“Hey!” I say as I lower myself onto my chair. “What are we talking about?”</p> 
+                    <p><em>(90)</em>And just like that, they tell me about a plan to go to a concert on Friday. The twins’ birthday is coming up and their favorite band is playing in Williamsburg, so they’re planning to get tickets for the whole group to celebrate.</p> 
+                    <p><em>(91)</em>“So, uh . . .” I say to my mom once I’ve made it back home from school. “I was invited to this birthday party on Friday. I—I mean, it’s more of a celebration than a party. We’re going to a concert, and it’s—”</p>
+                    <p><em>(92)</em>“You have plans?” she asks before I can complete my sentence.</p>
+                    <p><em>(93)</em>“Yeah.”</p>
+                    <p><em>(94)</em>“With friends?”</p> 
+                    <p><em>(95)</em>I nod.</p> 
+                    <p><em>(96)</em>She lets out a small sigh. “I’m so happy to hear that,” she says. “You should definitely go.”</p> 
+                    <p><em>(97)</em>“Gracias, Ma.”</p> 
+                    <p><em>(98)</em>“Oh, before I forget—I spoke to your abuela earlier. You should give her a call before dinner.”</p> 
+                    <p><em>(99)</em>Something warm fills my chest when I think of my grandmother. I head straight for the phone and dial her number.</p> 
+                    <p><em>(100)</em>She answers at the first ring. “How are you, mijo?” she asks.</p> 
+                    <p><em>(101)</em>No one had asked me this in a while. People have asked me how things are going, whether I had a good day, whether I’m hungry, and even if I’m feeling tired. But I can’t remember the last time someone asked me how I am . . . or at least not in the same way that Abuela’s asking it now.</p>
+                    <p><em>(102)</em>“I’m doing OK—for the most part,” I answer.</p>
+                    <p><em>(103)</em>“Well, that’s good,” Abuela replies, letting out a light laugh. “What’s life in America like?”</p>
+                    <p><em>(104)</em> I’m not sure how to answer. I mean . . . New York was a lot at first, but now it’s starting to feel like a warm jacket in winter. It’s starting to feel familiar and safe . . . which is exactly what my old home used to feel like.</p> 
+                    <p><em>(105)</em>Toma todo un día a la vez, Pa said, and he was right. Maybe, just as in food, there is sazón to be found everywhere around my new city. And it may have taken me a while to see it, but the truth is that there’s spice in the busy streets of our neighborhood, passion in the way my parents and teachers have tried to help me, and warmth in the people I’ve met at school.</p> 
+                    <p><em>(106)</em>“It’s good. Very good, actually,” I answer in the end because I finally feel ready to admit it. I feel ready to discover all the things I have yet to find about New York—all the flavor I know this city has to offer.</p> 
+                </div>
+                
+                <!-- ========== EDIT FOOTNOTES BELOW ========== -->
+                <div class="footnotes">
+                    <p>[1] optimist: n. An optimist has a positive, hopeful outlook.</p>
+                    <p>[2] imposing: adj. Something imposing is big and unfriendly or intimidating.</p>
+                    <p>[3] literally: adv. When a word is used literally it means what its dictionary definition says. </p>
+                    <p>[4] obsessed: adj. To be obsessed with something is to think about it constantly.</p>
+                </div>
+                <!-- ========== END EDITABLE SECTION ========== -->
+            </div>
+        
+        <!-- Highlights Section -->
+        <div class="highlights-section">
+            <div class="highlights-list">
+                <h3>Your Highlights:</h3>
+                <ul id="highlights-passage1"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Questions Pane -->
+    <div class="pane questions-pane">
+        <div class="questions-header-fixed">
+            <div class="header">
+                <h1>Questions</h1>
+            </div>
+            
+            <div class="student-id-section">
+                <label for="studentId"><strong>Student ID:</strong></label>
+                <input type="text" id="studentId" placeholder="Enter your ID" required>
+            </div>
+        </div>
+        
+        <div class="questions-content">
+            <!-- ========== EDIT QUESTIONS BELOW ========== -->
+            <!-- Use naming pattern: q1, q2, q3, etc. -->
+            <div class="question-set">
+                <h2>Passage Questions</h2>
+                
+                <div class="question">
+                    <div class="question-text">1. Who is the main character of the story My New American Life?</div>
+                    <div class="option"><label><input type="radio" name="q1" value="A"> A. Carlos</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="B"> B. Joe Miller</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="C"> C. Charlie</label></div>
+                    <div class="option"><label><input type="radio" name="q1" value="D"> D. Ma</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2. Why does Carlos move to New York?</div>
+                    <div class="option"><label><input type="radio" name="q2" value="A"> A. His father's new job takes the family there.</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="B"> B. He needs to move so he can learn more English.</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="C"> C. His parents always wanted to live in the United States.</label></div>
+                    <div class="option"><label><input type="radio" name="q2" value="D"> D. He does not like Mexico anymore.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3. Why does Carlos choose to eat lunch in a classroom on his first day at his new school?</div>
+                    <div class="option"><label><input type="radio" name="q3" value="A"> A. He isn’t sure which group to join in the cafeteria.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="B"> B. He mistakenly thinks he is supposed to go there.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="C"> C. He doesn’t want to share his food with strangers.</label></div>
+                    <div class="option"><label><input type="radio" name="q3" value="D"> D. He needs extra help with his social studies lesson.</label></div>
+                </div>
+                <!-- ========== SAMPLE NEW QUESTION ========== -->
+                <!-- Editor notes: Copy the whole div from <div class="question"> through the closing </div> THEN make sure THIS part has the next numeric ID: name="q4" IE) the next block woudld be name="q5"-->
+                <div class="question">
+                    <div class="question-text">4. What is something that Carlos notices right away about the New York City setting?</div>
+                    <div class="option"><label><input type="radio" name="q4" value="A"> A. There are more people than in Mexico City.</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="B"> B. Winter weather lasts longer than it does in Mexico City.</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="C"> C. There are more fun social activities available than in Mexico City.</label></div>
+                    <div class="option"><label><input type="radio" name="q4" value="D"> D. Excelling in school is less important and competitive than in Mexico City.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">5. </div>
+                    <div class="option"><label><input type="radio" name="q5" value="A"> A. Joe decides that Carlos is his enemy.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="B"> B. Carlos makes his first friend at his new school.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="C"> C. Charlie has to figure out how to solve his own problems.</label></div>
+                    <div class="option"><label><input type="radio" name="q5" value="D"> D. The class hears Carlos communicate effectively in English.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">6. What does Carlos learn from his friends about the New York City setting that makes him feel less like an outsider?</div>
+                    <div class="option"><label><input type="radio" name="q6" value="A"> A. His classmates feel just as confused about the homework assignments as he does.</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="B"> B. Other students tell him where to find familiar foods from home that he has been missing.</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="C"> C. Many of his fellow students have come to New York City from other places, just as he has.</label></div>
+                    <div class="option"><label><input type="radio" name="q6" value="D"> D. Everyone at the lunch table is able to speak to him in Spanish, making him feel more comfortable.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">7. What way does Carlos's life get better by the end of the story?</div>
+                    <div class="option"><label><input type="radio" name="q7" value="A"> A. He finds new friends and social activities.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="B"> B. He is finally getting along well with his parents.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="C"> C. He learns to guess what the weather will be like.</label></div>
+                    <div class="option"><label><input type="radio" name="q7" value="D"> D. He knows how to use the subway and the bus.</label></div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">8. Which sentence best describes the theme of the story My New American Life?</div>
+                    <div class="option"><label><input type="radio" name="q8" value="A"> A. Travel will help you learn new things.</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="B"> B. It is important to speak many languages.</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="C"> C. Take everything one day at a time, and before you know it, it'll be much better."</label></div>
+                    <div class="option"><label><input type="radio" name="q8" value="D"> D. Social studies is a difficult subject.</label></div>
+                </div>
+            </div>
+            <!-- ========== END EDITABLE SECTION ========== -->
+        </div>
+    </div>
+</div>
+    
+    <!-- Bottom Navigation -->
+    <div class="submit-section">
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script>
+        // Highlights storage
+        const highlights = {
+            passage1: []
+        };
+        
+        // Highlighting functionality
+        const passage = document.querySelector('.passage');
+        let highlightCounter = 0;
+        
+        passage.addEventListener('mouseup', function() {
+            const selection = window.getSelection();
+            let selectedText = selection.toString().trim();
+            
+            if (selectedText.length > 0) {
+                const passageId = this.id;
+                const range = selection.getRangeAt(0);
+                
+                // Paragraph boundary truncation
+                const startP = range.startContainer.nodeType === 3 ? 
+                    range.startContainer.parentElement.closest('p') : 
+                    range.startContainer.closest('p');
+                const endP = range.endContainer.nodeType === 3 ? 
+                    range.endContainer.parentElement.closest('p') : 
+                    range.endContainer.closest('p');
+                
+                if (startP !== endP) {
+                    range.setEndAfter(startP.lastChild);
+                    selectedText = range.toString().trim();
+                }
+                
+                highlightCounter++;
+                const highlightId = 'highlight-' + highlightCounter;
+                
+                // Visual feedback
+                let highlightElements = [];
+                try {
+                    const span = document.createElement('span');
+                    span.className = 'highlight';
+                    span.setAttribute('data-highlight-id', highlightId);
+                    
+                    const contents = range.extractContents();
+                    span.appendChild(contents);
+                    range.insertNode(span);
+                    
+                    highlightElements.push(span);
+                } catch (e) {
+                    // Highlighting failed
+                }
+                
+                // Store highlight
+                highlights[passageId].push({
+                    text: selectedText,
+                    id: highlightId,
+                    elements: highlightElements
+                });
+                
+                updateHighlightsList(passageId);
+                selection.removeAllRanges();
+            }
+        });
+        
+        // Update highlights list
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((highlight, index) => {
+                    const li = document.createElement('li');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        const currentIndex = highlights[passageId].findIndex(h => h.id === highlight.id);
+                        
+                        if (currentIndex === -1) {
+                            return;
+                        }
+                        
+                        const highlightToRemove = highlights[passageId][currentIndex];
+                        
+                        highlightToRemove.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        highlights[passageId].splice(currentIndex, 1);
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize
+        updateHighlightsList('passage1');
+        
+        // Dynamically detect all questions
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate label from question name
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/q(\d+)/);
+            if (match) {
+                return `Question ${match[1]}`;
+            }
+            return questionName;
+        }
+        
+        // CSV generation
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        function downloadCSV(studentId, answers, annotations) {
+            const annotationTexts = annotations.map(h => h.text);
+            const annotationsJSON = JSON.stringify(annotationTexts);
+            
+            const questionNames = getAllQuestionNames();
+            
+            const row = [
+                studentId,
+                annotationsJSON,
+                ...questionNames.map(name => answers[name] || '')
+            ];
+            
+            const csvContent = row.map(escapeCSV).join(',');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            const questionNames = getAllQuestionNames();
+            const answers = {};
+            let missingQuestions = [];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
+            });
+            
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                downloadCSV(studentId, answers, highlights.passage1);
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

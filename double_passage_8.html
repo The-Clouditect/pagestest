@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Research Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+        }
+        
+        .questions-pane {
+            background: #fff;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+            cursor: text;
+            user-select: text;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .highlights-list {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-size: 13px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .part-nav-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #666;
+            border-radius: 5px;
+        }
+        
+        .part-nav-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .part-nav-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        .submit-section button {
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover:not(:disabled) {
+            background: #555;
+            border-color: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .part-content {
+            display: none;
+        }
+        
+        .part-content.active {
+            display: block;
+        }
+        
+        .pane {
+            padding-bottom: 100px; /* Space for fixed bottom nav */
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="header">
+                <h1>Reading Passages</h1>
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
+            </div>
+            
+            <!-- Part 1 Content -->
+            <div class="part-content active" id="part1-reading">
+                <div class="passage" id="passage1" data-passage="1">
+                    <h2></h2>
+                    <p><em>(1)</em></p>
+                    <p><em>(2)</em></p>
+                    <p><em>(3)</em></p>  
+                    <p><em>(4)</em></p>
+                    <p><em>(5)</em></p>
+                    <p><em>(6)</em></p>
+                    <p><em>(7)</em></p>
+                    <p><em>(8)</em></p>
+                    <p><em>(9)</em></p>
+                    <p><em>(10)</em></p>
+                    <p><em>(11)</em></p>
+                    <p><em>(12)</em></p>
+                    <p><em>(13)</em></p>
+                    <p><em>(14)</em></p>
+                    <p><em>(15)</em></p>
+                    <p><em>(16)</em></p>
+                    <p><em>(17)</em></p>
+                    <p><em>(18)</em></p>
+                    <p><em>(19)</em></p>
+                    <p><em>(20)</em></p>
+                    <p><em>(21)</em></p>
+                    <p><em>(22)</em></p>
+                    <p><em>(23)</em></p>  
+
+                </div>
+                
+                <div class="highlights-list">
+                    <h3>Your Passage 1 Highlights:</h3>
+                    <ul id="highlights-passage1"></ul>
+                </div>
+            </div>
+            
+            <!-- Part 2 Content -->
+            <div class="part-content" id="part2-reading">
+                <div class="passage" id="passage2" data-passage="2">
+                    <h2></h2>
+                    <p><em>(1)</em></p>
+                    <p><em>(2)</em></p>
+                    <p><em>(3)</em></p>
+                    <p><em>(4)</em></p>
+                    <p><em>(5)</em></p>
+                    <p><em>(6)</em></p>
+                    
+                </div>
+                
+                <div class="highlights-list">
+                    <h3>Your Passage 2 Highlights:</h3>
+                    <ul id="highlights-passage2"></ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Questions Pane -->
+        <div class="pane questions-pane">
+            <div class="header">
+                <h1>Questions</h1>
+            </div>
+            
+            <div class="student-id-section">
+                <label for="studentId"><strong>Student ID:</strong></label>
+                <input type="text" id="studentId" placeholder="Enter your ID" required>
+            </div>
+            
+            <!-- Part 1 Questions -->
+            <div class="part-content active" id="part1-questions">
+                <div class="question-set">
+                    <h2>Passage 1 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">1. What is the topic of the biography?</div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="A"> A. The death of Abraham Lincoln</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="B"> B. Frederick Douglass’s childhood and early years</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="C"> C. How Lincoln’s and Douglass’s opinions were different</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="D"> D. The connection between Lincoln and Douglass</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. What mood does the author’s choice of words in paragraph 1 primarily create?</div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="A"> A. fear</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="B"> B. hope</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="C"> C. nervous</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="D"> D. happy</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. Which quote is the best evidence from the biography to support the idea that Douglass and Lincoln were good friends.</div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="A"> A. “You must stop a little Douglass; there is no man whose opinion I value more than yours. I want to know what you think of it.” (paragraph 9)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="B"> B. Within moments, Douglass was being escorted into the elegant East Room of the White House. (paragraph 6)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="C"> C. As he traveled widely, lecturing on social issues and national politics, Douglass spoke often about Abraham Lincoln. (paragraph 20)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="D"> D. In the 1870s, Douglass moved with his family to Washington, D.C., where he edited a newspaper, held a succession of federal appointments, and clearly enjoyed his exalted position as an elder statesman of America’s black citizens. (paragraph 21)</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. Which main idea do the details in paragraph 19 support?</div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="A"> A. Douglass was a very prominent speaker.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="B"> B. Lincoln was killed in response to the Civil War.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="C"> C. Douglass lost rights in the Reconstruction.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="D"> D. Lincoln believed voting was an important right.</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. Read the sentence, and choose the word that would best fit in the blank. <em>He continued to _____ injustice and inequality with the undiminished fervor of an old warrior.</em></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="A"> A. sympathy</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="B"> B. emancipation</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="C"> C. denounce</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="D"> D. civil</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. What does the author say about Douglass and Lincoln at the end of the selection?</div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="A"> A. They were more similar than they were different.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="B"> B. They often disagreed and then came to a compromise.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="C"> C. They agreed with each other on every issue.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="D"> D. They were not as friendly as appearances suggested.</label></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-text">7. What is the author's purpose for including the details about Abraham Lincoln's "favorite walking stick" in Paragraph 18?</div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="A"> A. show how people needed to walk more in the past</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="B"> B. show how people needed to walk more in the past</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="C"> C. give an example of how Frederick Douglass was lucky</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="D"> D. support the idea that Frederick Douglass and Abraham Lincoln had a strong relationship</label></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Part 2 Questions -->
+            <div class="part-content" id="part2-questions">
+                <div class="question-set">
+                    <h2>Passage 2 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">8. The text can be called an autobiography because —</div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="A"> A. it has a narrator describing real people</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="B"> B. it has historical figures in authentic settings</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="C"> C. it is told in first person about actual events</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="D"> D. it is told in third person with accurate facts</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. In paragraph 2 of the text, Douglass calls his mistress tiger like to emphasize how —</div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="A"> A. threatening she became when she decided to deny him an education</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="B"> B. confused she was about whether to hate or enjoy being a slave owner</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="C"> C. forceful she became when it came to caring for the hungry or needy</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="D"> D. angry she was when she noticed her husband mistreating the slaves</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">10. </div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="A"> A. </label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="B"> B. </label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="C"> C. </label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="D"> D. </label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">11. Read the sentence from paragraph 6. <em>The more I read, the more I was led to abhor and detest my enslavers.</em> Which word is best used in the place of abhor to keep the meaning of the sentence the same?</div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="A"> A. annoy</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="B"> B. fear</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="C"> C. impair</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="D"> D. loathe</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">12. Read the sentence from paragraph 6. <em>As I read and contemplated the subject, behold! that very discontentment which Master Hugh had predicted would follow my learning to read had already come, to torment and sting my soul to unutterable anguish.</em> Which word is best used in the place of discontentment to keep the meaning of the sentence the same?</div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="A"> A. misery</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="B"> B. potential</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="C"> C. sensation</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="D"> D. uncertainty</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">13. What is the most likely reason the author includes paragraph 5 in the text?</div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="A"> A. To suggest that a book gave him hope that someday he could be free</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="B"> B. To show that reading a book and debating its ideas would set him free</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="C"> C. To show that he was planning to run away soon from his master</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="D"> D. To suggest that he could talk with his master if he were well-read</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">14. Which of these conclusions about Douglass’s "unutterable anguish" is supported by paragraph 6?</div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="A"> A. He sees that his life would have been in turmoil even if he had been born free.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="B"> B. He sees that there is no such thing as the truth or human rights in the world.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="C"> C. He realizes that his master was correct about how reading the book was a big mistake.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="D"> D. He realizes that reading the book has shown him what he is missing by being enslaved.</label></div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-text">15. Which word best describes how Douglass feels after Master Hugh puts a stop to his education?</div>
+                        <div class="option"><label><input type="radio" name="p2q8" value="A"> A. angry</label></div>
+                        <div class="option"><label><input type="radio" name="p2q8" value="B"> B. determined</label></div>
+                        <div class="option"><label><input type="radio" name="p2q8" value="C"> C. hopeful</label></div>
+                        <div class="option"><label><input type="radio" name="p2q8" value="D"> D. discouraged</label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation with Part buttons and Submit -->
+    <div class="submit-section">
+        <button class="part-nav-btn active" id="part1Btn">Part 1</button>
+        <button class="part-nav-btn" id="part2Btn">Part 2</button>
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script>
+        // Highlight management - track both text and visual elements
+        const highlights = {
+            passage1: [],
+            passage2: []
+        };
+        
+        // Part navigation
+        const part1Btn = document.getElementById('part1Btn');
+        const part2Btn = document.getElementById('part2Btn');
+        const part1Reading = document.getElementById('part1-reading');
+        const part2Reading = document.getElementById('part2-reading');
+        const part1Questions = document.getElementById('part1-questions');
+        const part2Questions = document.getElementById('part2-questions');
+        
+        part1Btn.addEventListener('click', () => {
+            // Show Part 1
+            part1Reading.classList.add('active');
+            part1Questions.classList.add('active');
+            part2Reading.classList.remove('active');
+            part2Questions.classList.remove('active');
+            
+            // Update button states
+            part1Btn.classList.add('active');
+            part2Btn.classList.remove('active');
+        });
+        
+        part2Btn.addEventListener('click', () => {
+            // Show Part 2
+            part2Reading.classList.add('active');
+            part2Questions.classList.add('active');
+            part1Reading.classList.remove('active');
+            part1Questions.classList.remove('active');
+            
+            // Update button states
+            part2Btn.classList.add('active');
+            part1Btn.classList.remove('active');
+        });
+        
+        // Highlighting functionality
+        const passages = document.querySelectorAll('.passage');
+        let highlightCounter = 0; // Unique ID for each highlight
+        
+        passages.forEach(passage => {
+            passage.addEventListener('mouseup', function() {
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+                
+                if (selectedText.length > 0) {
+                    const passageId = this.id;
+                    highlightCounter++;
+                    const highlightId = 'highlight-' + highlightCounter;
+                    
+                    // Visual feedback - highlight the selected text
+                    let highlightElements = [];
+                    try {
+                        const range = selection.getRangeAt(0);
+                        const span = document.createElement('span');
+                        span.className = 'highlight';
+                        span.setAttribute('data-highlight-id', highlightId);
+                        
+                        // Extract contents, wrap in span, and reinsert
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
+                        
+                        highlightElements.push(span);
+                        
+                    } catch (e) {
+                        // If highlighting fails, still store the text
+                        console.log('Could not apply visual highlight, but text was saved');
+                    }
+                    
+                    // Store both the text and reference to visual elements
+                    highlights[passageId].push({
+                        text: selectedText,
+                        id: highlightId,
+                        elements: highlightElements
+                    });
+                    
+                    // Update the highlights list display
+                    updateHighlightsList(passageId);
+                    
+                    selection.removeAllRanges();
+                }
+            });
+        });
+        
+        // Update the highlights list display
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((highlight, index) => {
+                    const li = document.createElement('li');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        // Remove visual highlights from the text
+                        highlight.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                // Replace the highlight span with its text content
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        // Remove from the array
+                        highlights[passageId].splice(index, 1);
+                        
+                        // Refresh the list
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize highlight lists as empty
+        updateHighlightsList('passage1');
+        updateHighlightsList('passage2');
+        
+        // Dynamically detect all questions from the HTML
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate human-readable label from question name (e.g., p1q3 -> Part 1, Question 3)
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/p(\d+)q(\d+)/);
+            if (match) {
+                const partNum = match[1];
+                const questionNum = match[2];
+                // Calculate overall question number
+                const overallNum = partNum === '1' ? parseInt(questionNum) : 7 + parseInt(questionNum);
+                return `Part ${partNum}, Question ${overallNum}`;
+            }
+            return questionName; // Fallback
+        }
+        
+        // CSV generation function
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            // If contains comma, quote, or newline, wrap in quotes and escape internal quotes
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        function downloadCSV(studentId, answers, text1Annotations, text2Annotations) {
+            // Convert annotation arrays to JSON strings (extract just the text)
+            const text1Texts = text1Annotations.map(h => h.text);
+            const text2Texts = text2Annotations.map(h => h.text);
+            const text1AnnotationsJSON = JSON.stringify(text1Texts);
+            const text2AnnotationsJSON = JSON.stringify(text2Texts);
+            
+            // Get all question names dynamically
+            const questionNames = getAllQuestionNames();
+            
+            // Separate Part 1 and Part 2 questions
+            const part1Questions = questionNames.filter(name => name.startsWith('p1'));
+            const part2Questions = questionNames.filter(name => name.startsWith('p2'));
+            
+            // Build data row dynamically
+            const row = [
+                studentId,
+                text1AnnotationsJSON,
+                ...part1Questions.map(name => answers[name] || ''),
+                text2AnnotationsJSON,
+                ...part2Questions.map(name => answers[name] || '')
+            ];
+            
+            // Build CSV content (no header, just data row)
+            const csvContent = row.map(escapeCSV).join(',');
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler with dynamic validation
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            // Validate student ID
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            // Get all questions dynamically
+            const questionNames = getAllQuestionNames();
+            
+            // Collect and validate answers
+            const answers = {};
+            let missingQuestions = [];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
+            });
+            
+            // Check if any questions are missing
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during download
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                // Generate and download CSV
+                downloadCSV(
+                    studentId,
+                    answers,
+                    highlights.passage1,
+                    highlights.passage2
+                );
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                // Re-enable after 3 seconds
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
