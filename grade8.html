@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Research Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .pane {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .reading-pane {
+            background: #f9f9f9;
+            border-right: 2px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .reading-header {
+            padding: 30px 30px 0 30px;
+            background: #f9f9f9;
+        }
+        
+        .reading-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-top: 20px;
+        }
+        
+        .highlights-section {
+            height: 125px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f0f0f0;
+            border-top: 2px solid #333;
+        }
+        
+        .highlights-list {
+            margin-bottom: 20px;
+        }
+        
+        .highlights-list:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlights-list h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .questions-pane {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .questions-header-fixed {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 100;
+            padding: 30px 30px 0 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .questions-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .student-id-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .student-id-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+            margin-left: 10px;
+        }
+        
+        .passage {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            line-height: 1.8;
+            font-size: 16px;
+            cursor: text;
+            user-select: text;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .passage h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 0;
+        }
+        
+        .highlights-list {
+            margin-bottom: 15px;
+        }
+        
+        .highlights-list:last-child {
+            margin-bottom: 0;
+        }
+        
+        .highlights-list h3 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .highlights-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .highlights-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .highlights-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .highlight-text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .clear-btn {
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .question-set {
+            margin-bottom: 40px;
+        }
+        
+        .question-set h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 30px;
+            background: #fff;
+            border-top: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .part-nav-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #666;
+            border-radius: 5px;
+        }
+        
+        .part-nav-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .part-nav-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        .submit-section button {
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .submit-section button:hover:not(:disabled) {
+            background: #555;
+            border-color: #555;
+        }
+        
+        .submit-section button:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .part-content {
+            display: none;
+        }
+        
+        .part-content.active {
+            display: block;
+        }
+        
+        .pane {
+            padding-bottom: 100px; /* Space for fixed bottom nav */
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .footnotes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Reading Pane -->
+        <div class="pane reading-pane">
+            <div class="reading-header">
+                <div class="header">
+                    <h1>Reading Passages</h1>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">Select text to highlight it</p>
+                </div>
+            </div>
+            
+            <div class="reading-content">
+                <!-- Part 1 Content -->
+                <div class="part-content active" id="part1-reading">
+                    <div class="passage" id="passage1" data-passage="1">
+                        <h2></h2>
+                        <p><em>(1)</em>On the morning of March 4, 1865, Frederick Douglass joined a festive crowd of 30,000 spectators at the U.S. Capitol to witness Abraham Lincoln’s second inauguration. Weeks of rain had turned Washington’s unpaved streets into a sea of mud, but despite the wet and windy weather, the crowd was in a mood to celebrate. Union troops were marching victoriously through the South. Everyone knew that the war was almost over. When Lincoln’s tall figure appeared, “cheer upon cheer arose, bands blatted upon the air, and flags waved all over the scene.”</p>
+                        <p><em>(2)</em>The Civil War had cost more than 600,000 American lives. The fighting had been more bitter and lasted far longer than anyone could have imagined. The “cause of the war” was slavery, Lincoln declared. Slavery was the one institution that divided the nation. And slavery was a hateful and evil practice—a sin in the sight of God. “This mighty scourge of war” was a terrible retribution, a punishment for allowing human bondage to flourish on the nation’s soil. Now that slavery was abolished, the time had come “to bind up the nation’s wounds” and “cherish a just and lasting peace among ourselves and with all nations.”</p>  
+                        <p><em>(3)</em>Following the “wonderfully quiet, earnest, and solemn” ceremony, Douglass wanted to congratulate Lincoln personally. That evening he joined the crowd heading to attend the gala inaugural reception at the White House—a building completed with slave labor just a half century earlier. “Though no colored persons had ever ventured to present themselves on such occasions,” Douglass wrote, “it seemed, now that freedom had become the law of the republic, and colored men were on the battlefield, mingling their blood with that of white men in one common effort to save the country, that it was not too great an assumption for a colored man to offer his congratulations to the President with those of other citizens.”</p>
+                        <p><em>(4)</em>At the White House door, Douglass was stopped by two policemen who “took me rudely by the arm and ordered me to stand back.” Their orders, they told him, were “to admit no persons of my color.” Douglass didn’t believe them. He was positive that no such order could have come from the president.</p>
+                        <p><em>(5)</em>The police tried to steer Douglass away from the doorway and out a side exit. He refused to leave. “I shall not go out of this building till I see President Lincoln,” he insisted. Just then he spotted an acquaintance who was entering the building and asked him to send word “to Mr. Lincoln that Frederick Douglass is detained by officers at the door.” Within moments, Douglass was being escorted into the elegant East Room of the White House.</p>
+                        <p><em>(6)</em>Lincoln stood among his guests “like a mountain pine high above all others.” As Douglass approached through the crowd, Lincoln called out, “Here comes my friend Douglass.” The president took Douglass by the hand. “I am glad to see you,” he said. “I saw you in the crowd today, listening to my inaugural address. How did you like it?”</p>
+                        <p><em>(7)</em>Douglass hesitated. “Mr. Lincoln, I must not detain you with my poor opinion when there are thousands waiting to shake hands with you.”</p>
+                        <p><em>(8)</em>“No, no,” said the president. “You must stop a little Douglass; there is no man whose opinion I value more than yours. I want to know what you think of it.”</p>
+                        <p><em>(9)</em>“Mr. Lincoln, that was a sacred effort,” Douglass replied.</p>
+                        <p><em>(10)</em>“I’m glad you liked it!”</p>
+                        <p><em>(11)</em>And with that, Douglass moved on, making way for other guests who were waiting to shake the hand of Abraham Lincoln.</p>
+                        <p><em>(12)</em>A month later, on April 9, 1865, generals Grant and Lee met at Appomattox Courthouse in Virginia, where Grant accepted the surrender of Lees Confederate army. After almost four years of savage fighting, the Civil War had ended. “Guns are firing, bells ringing, flags flying, men laughing, children cheering, all, all jubilant,” Gideon Welles, Lincoln’s secretary of the navy, recorded in his diary.</p>
+                        <p><em>(13)</em>Throngs of people collected around the White House, calling for the president. When Lincoln appeared, he asked the band to play “Dixie,” a popular minstrel tune that had become associated with the Confederate cause. “It is one of the best tunes I have ever heard,” Lincoln told the crowd. He joked that the tune was now “a lawful prize,” since “we fairly captured it.” So the band played “Dixie,” then struck up “Yankee Doodle.”</p>
+                        <p><em>(14)</em>Five days later, as Lincoln sat watching a play with his wife at Fords Theater in Washington, the president was shot in the head by actor John Wilkes Booth. Lincoln died early the next morning, April 15, 1865.</p>
+                        <p><em>(15)</em>“A dreadful disaster has befallen the nation,” Frederick Douglass told a memorial service in Rochester that afternoon. “It is a day for silence and meditation; for grief and tears.”</p>
+                        <p><em>(16)</em>For Douglass, Lincolns death was “a personal as well as a national calamity.” He felt that he had lost a friend, and how deeply he mourned that day for Abraham Lincoln, “I dare not attempt to tell. It was only a few days ago that I shook his brave, honest hand, and looked into his gentle eye and heard his kindly voice.”</p>
+                        <p><em>(17)</em>A few months later Douglass received in the mail a long, slender package from Washington, D.C., along with a note from Mary Todd Lincoln. Her husband had considered Douglass a special friend, she wrote, and before he died, he had wanted to do something to express his warm personal regard. Since he hadn’t had the chance, Mary had decided to send Douglass her husband’s favorite walking stick as a memento of their friendship.</p>
+                        <p><em>(18)</em>When Abraham Lincoln was assassinated, Frederick Douglass, in his mid-forties, was America’s most influential black citizen. For the rest of his long life, he continued in his speeches and writings to be a powerful voice for social justice, denouncing racism and demanding equal rights for blacks and whites alike. During the Reconstruction era of the 1870s and 1880s, when many of the rights gained after emancipation were snatched away in the South, Douglass spoke out against lynchings, the terrorism of the Ku Klux Klan, and the Jim Crow laws that were devised to keep blacks in their place and away from the ballot box.</p>
+                        <p><em>(19)</em>As he traveled widely, lecturing on social issues and national politics, Douglass spoke often about Abraham Lincoln. During the war, he had criticized the president for being slow to move against slavery, for resisting the enlistment of black soldiers, for inviting blacks “to leave the land in which we were born.” But with emancipation, and in the aftermath of the war, Douglass had come to appreciate Lincoln’s sensitivity to popular opinion and to admire the political skills Lincoln employed to win public support. “His greatest mission was to accomplish two things: first, to save the country from dismemberment and ruin; and, second, to free his country from the great crime of slavery. To do one or the other, or both,” Douglass said, Lincoln needed “the earnest sympathy and the powerful cooperation of his fellow countrymen.”</p>
+                        <p><em>(20)</em>In the 1870s, Douglass moved with his family to Washington, D.C., where he edited a newspaper, held a succession of federal appointments, and clearly enjoyed his exalted position as an elder statesman of America’s black citizens. And he continued to denounce injustice and inequality with the undiminished fervor of an old warrior.</p>
+                        <p><em>(21)</em>His last home was a large, comfortable house called Cedar Hill, perched high on a hilltop looking down at the Anacostia River and the U.S. capital beyond. Cedar Hill had a spacious library, large enough to hold Douglass’s collection of some two thousand books. From time to time, as he picked a book from his shelves and settled down to read, he must have recalled those distant days in Baltimore when he was a young slave named Frederick Bailey, a determined boy who owned just one book, a single volume that he kept hidden from view and read in secret.</p>
+                        <p><em>(22)</em>Lincoln had read and studied the same book as a young man in New Salem. That was something they had in common, a shared experience that helped each of them rise from obscurity to greatness. “He was the architect of his own fortune, a self-made man,” Douglass wrote of Lincoln. He had “ascended high, but with hard hands and honest work built the ladder on which he climbed”—words that Douglass, as he was aware, could easily have applied to himself.</p>  
+                    </div>
+                    
+                    <div class="footnotes">
+                        <p>[1] card-carrying: A term meaning someone who is a committed or official member of a group.</p>
+                        <p>[2] resplendent: Shining brilliantly, characterized by a glowing splendor.</p>
+                    </div>
+            </div>
+            
+            <!-- Part 2 Content -->
+            <div class="part-content" id="part2-reading">
+                <div class="passage" id="passage2" data-passage="2">
+                    <h2></h2>
+                    <p><em>(1)</em>I lived in Master Hugh’s family about seven years. During this time, I succeeded in learning to read and write. In accomplishing this, I was compelled to resort to various stratagems. I had no regular teacher. My mistress, who had kindly commenced to instruct me, had, in compliance with the advice and direction of her husband, not only ceased to instruct, but had set her face against my being instructed by any one else. It is due, however, to my mistress to say of her, that she did not adopt this course of treatment immediately. She at first lacked the depravity indispensable to shutting me up in mental darkness. It was at least necessary for her to have some training in the exercise of irresponsible power, to make her equal to the task of treating me as though I were a brute.</p>
+                    <p><em>(2)</em>My mistress was, as I have said, a kind and tender-hearted woman; and in the simplicity of her soul she commenced, when I first went to live with her, to treat me as she supposed one human being ought to treat another. In entering upon the duties of a slaveholder, she did not seem to perceive that I sustained to her the relation of a mere chattel, and that for her to treat me as a human being was not only wrong, but dangerously so. Slavery proved as injurious to her as it did to me. When I went there, she was a pious, warm, and tender-hearted woman. There was no sorrow or suffering for which she had not a tear. She had bread for the hungry, clothes for the naked, and comfort for every mourner that came within her reach. Slavery soon proved its ability to divest her of these heavenly qualities. Under its influence, the tender heart became stone, and the lamblike disposition gave way to one of tigerlike fierceness. The first step in her downward course was in her ceasing to instruct me. She now commenced to practise her husband’s precepts. She finally became even more violent in her opposition than her husband himself. She was not satisfied with simply doing as well as he had commanded; she seemed anxious to do better. Nothing seemed to make her more angry than to see me with a newspaper. She seemed to think that here lay the danger. I have had her rush at me with a face made all up of fury, and snatch from me a newspaper, in a manner that fully revealed her apprehension. She was an apt woman; and a little experience soon demonstrated, to her satisfaction, that education and slavery were incompatible with each other.</p>
+                    <p><em>(3)</em>From this time I was most narrowly watched. If I was in a separate room any considerable length of time, I was sure to be suspected of having a book, and was at once called to give an account of myself. All this, however, was too late. The first step had been taken. Mistress, in teaching me the alphabet, had given me the inch, and no precaution could prevent me from taking the ell.</p>
+                    <p><em>(4)</em>The plan which I adopted, and the one by which I was most successful, was that of making friends of all the little white boys whom I met in the street. As many of these as I could, I converted into teachers. With their kindly aid, obtained at different times and in different places, I finally succeeded in learning to read. When I was sent of errands, I always took my book with me, and by going one part of my errand quickly, I found time to get a lesson before my return. I used also to carry bread with me, enough of which was always in the house, and to which I was always welcome; for I was much better off in this regard than many of the poor white children in our neighborhood. This bread I used to bestow upon the hungry little urchins, who, in return, would give me that more valuable bread of knowledge. I am strongly tempted to give the names of two or three of those little boys, as a testimonial of the gratitude and affection I bear them; but prudence forbids;—not that it would injure me, but it might embarrass them; for it is almost an unpardonable offence to teach slaves to read in this Christian country. It is enough to say of the dear little fellows, that they lived on Philpot Street, very near Durgin and Bailey’s ship-yard. I used to talk this matter of slavery over with them. I would sometimes say to them, I wished I could be as free as they would be when they got to be men. “You will be free as soon as you are twenty-one, but I am a slave for life! Have not I as good a right to be free as you have?” These words used to trouble them; they would express for me the liveliest sympathy, and console me with the hope that something would occur by which I might be free.</p>
+                    <p><em>(5)</em>I was now about twelve years old, and the thought of being a slave for life began to bear heavily upon my heart. Just about this time, I got hold of a book entitled “The Columbian Orator.” Every opportunity I got, I used to read this book. Among much of other interesting matter, I found in it a dialogue between a master and his slave. The slave was represented as having run away from his master three times. The dialogue represented the conversation which took place between them, when the slave was retaken the third time. In this dialogue, the whole argument in behalf of slavery was brought forward by the master, all of which was disposed of by the slave. The slave was made to say some very smart as well as impressive things in reply to his master—things which had the desired though unexpected effect; for the conversation resulted in the voluntary emancipation of the slave on the part of the master.</p>
+                    <p><em>(6)</em>In the same book, I met with one of Sheridan’s mighty speeches on and in behalf of Catholic emancipation. These were choice documents to me. I read them over and over again with unabated interest. They gave tongue to interesting thoughts of my own soul, which had frequently flashed through my mind, and died away for want of utterance. The moral which I gained from the dialogue was the power of truth over the conscience of even a slaveholder. What I got from Sheridan was a bold denunciation of slavery, and a powerful vindication of human rights. The reading of these documents enabled me to utter my thoughts, and to meet the arguments brought forward to sustain slavery; but while they relieved me of one difficulty, they brought on another even more painful than the one of which I was relieved. The more I read, the more I was led to abhor and detest my enslavers. I could regard them in no other light than a band of successful robbers, who had left their homes, and gone to Africa, and stolen us from our homes, and in a strange land reduced us to slavery. I loathed them as being the meanest as well as the most wicked of men. As I read and contemplated the subject, behold! that very discontentment which Master Hugh had predicted would follow my learning to read had already come, to torment and sting my soul to unutterable anguish. As I writhed under it, I would at times feel that learning to read had been a curse rather than a blessing. It had given me a view of my wretched condition, without the remedy. It opened my eyes to the horrible pit, but to no ladder upon which to get out. In moments of agony, I envied my fellow-slaves for their stupidity. I have often wished myself a beast. I preferred the condition of the meanest reptile to my own. Anything, no matter what, to get rid of thinking! It was this everlasting thinking of my condition that tormented me. There was no getting rid of it. It was pressed upon me by every object within sight or hearing, animate or inanimate. The silver trump of freedom had roused my soul to eternal wakefulness. Freedom now appeared, to disappear no more forever. It was heard in every sound, and seen in every thing. It was ever present to torment me with a sense of my wretched condition. I saw nothing without seeing it, I heard nothing without hearing it, and felt nothing without feeling it. It looked from every star, it smiled in every calm, breathed in every wind, and moved in every storm.</p>
+                </div>
+                
+                <div class="footnotes">
+                    <p>[1] abuelita: The Spanish word for grandmother.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Highlights Section -->
+        <div class="highlights-section">
+            <div class="part-content active" id="part1-highlights">
+                <div class="highlights-list">
+                    <h3>Your Passage 1 Highlights:</h3>
+                    <ul id="highlights-passage1"></ul>
+                </div>
+            </div>
+            <div class="part-content" id="part2-highlights">
+                <div class="highlights-list">
+                    <h3>Your Passage 2 Highlights:</h3>
+                    <ul id="highlights-passage2"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Questions Pane -->
+        <div class="pane questions-pane">
+            <div class="questions-header-fixed">
+                <div class="header">
+                    <h1>Questions</h1>
+                </div>
+                
+                <div class="student-id-section">
+                    <label for="studentId"><strong>Student ID:</strong></label>
+                    <input type="text" id="studentId" placeholder="Enter your ID" required>
+                </div>
+            </div>
+            
+            <div class="questions-content">
+            <!-- Part 1 Questions -->
+            <div class="part-content active" id="part1-questions">
+                <div class="question-set">
+                    <h2>Passage 1 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">1. What is the topic of the biography?</div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="A"> A. The death of Abraham Lincoln</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="B"> B. Frederick Douglass’s childhood and early years</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="C"> C. How Lincoln’s and Douglass’s opinions were different</label></div>
+                        <div class="option"><label><input type="radio" name="p1q1" value="D"> D. The connection between Lincoln and Douglass</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. What mood does the author’s choice of words in paragraph 1 primarily create?</div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="A"> A. fear</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="B"> B. hope</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="C"> C. nervous</label></div>
+                        <div class="option"><label><input type="radio" name="p1q2" value="D"> D. happy</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. Which quote is the best evidence from the biography to support the idea that Douglass and Lincoln were good friends.</div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="A"> A. “You must stop a little Douglass; there is no man whose opinion I value more than yours. I want to know what you think of it.” (paragraph 9)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="B"> B. Within moments, Douglass was being escorted into the elegant East Room of the White House. (paragraph 6)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="C"> C. As he traveled widely, lecturing on social issues and national politics, Douglass spoke often about Abraham Lincoln. (paragraph 20)</label></div>
+                        <div class="option"><label><input type="radio" name="p1q3" value="D"> D. In the 1870s, Douglass moved with his family to Washington, D.C., where he edited a newspaper, held a succession of federal appointments, and clearly enjoyed his exalted position as an elder statesman of America’s black citizens. (paragraph 21)</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. Which main idea do the details in paragraph 19 support?</div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="A"> A. Douglass was a very prominent speaker.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="B"> B. Lincoln was killed in response to the Civil War.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="C"> C. Douglass lost rights in the Reconstruction.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q4" value="D"> D. Lincoln believed voting was an important right.</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. Read the sentence, and choose the word that would best fit in the blank. <em>He continued to _____ injustice and inequality with the undiminished fervor of an old warrior.</em></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="A"> A. sympathy</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="B"> B. emancipation</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="C"> C. denounce</label></div>
+                        <div class="option"><label><input type="radio" name="p1q5" value="D"> D. civil</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. What does the author say about Douglass and Lincoln at the end of the selection?</div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="A"> A. They were more similar than they were different.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="B"> B. They often disagreed and then came to a compromise.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="C"> C. They agreed with each other on every issue.</label></div>
+                        <div class="option"><label><input type="radio" name="p1q6" value="D"> D. They were not as friendly as appearances suggested.</label></div>
+                    </div>
+                    <div class="question">
+                        <div class="question-text">7. What is the author's purpose for including the details about Abraham Lincoln's "favorite walking stick" in Paragraph 18?</div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="A"> A. show how people needed to walk more in the past</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="B"> B. show how people needed to walk more in the past</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="C"> C. give an example of how Frederick Douglass was lucky</label></div>
+                        <div class="option"><label><input type="radio" name="p1q7" value="D"> D. support the idea that Frederick Douglass and Abraham Lincoln had a strong relationship</label></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Part 2 Questions -->
+            <div class="part-content" id="part2-questions">
+                <div class="question-set">
+                    <h2>Passage 2 Questions</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">8. The text can be called an autobiography because —</div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="A"> A. it has a narrator describing real people</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="B"> B. it has historical figures in authentic settings</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="C"> C. it is told in first person about actual events</label></div>
+                        <div class="option"><label><input type="radio" name="p2q1" value="D"> D. it is told in third person with accurate facts</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. In paragraph 2 of the text, Douglass calls his mistress tiger like to emphasize how —</div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="A"> A. threatening she became when she decided to deny him an education</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="B"> B. confused she was about whether to hate or enjoy being a slave owner</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="C"> C. forceful she became when it came to caring for the hungry or needy</label></div>
+                        <div class="option"><label><input type="radio" name="p2q2" value="D"> D. angry she was when she noticed her husband mistreating the slaves</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">10. Read the sentence from paragraph 6. <em>The more I read, the more I was led to abhor and detest my enslavers.</em> Which word is best used in the place of abhor to keep the meaning of the sentence the same?</div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="A"> A. annoy</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="B"> B. fear</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="C"> C. impair</label></div>
+                        <div class="option"><label><input type="radio" name="p2q3" value="D"> D. loathe</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">11. Read the sentence from paragraph 6. <em>As I read and contemplated the subject, behold! that very discontentment which Master Hugh had predicted would follow my learning to read had already come, to torment and sting my soul to unutterable anguish.</em> Which word is best used in the place of discontentment to keep the meaning of the sentence the same?</div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="A"> A. misery</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="B"> B. potential</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="C"> C. sensation</label></div>
+                        <div class="option"><label><input type="radio" name="p2q4" value="D"> D. uncertainty</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">12. What is the most likely reason the author includes paragraph 5 in the text?</div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="A"> A. To suggest that a book gave him hope that someday he could be free</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="B"> B. To show that reading a book and debating its ideas would set him free</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="C"> C. To show that he was planning to run away soon from his master</label></div>
+                        <div class="option"><label><input type="radio" name="p2q5" value="D"> D. To suggest that he could talk with his master if he were well-read</label></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">13. Which of these conclusions about Douglass’s "unutterable anguish" is supported by paragraph 6?</div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="A"> A. He sees that his life would have been in turmoil even if he had been born free.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="B"> B. He sees that there is no such thing as the truth or human rights in the world.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="C"> C. He realizes that his master was correct about how reading the book was a big mistake.</label></div>
+                        <div class="option"><label><input type="radio" name="p2q6" value="D"> D. He realizes that reading the book has shown him what he is missing by being enslaved.</label></div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-text">14. Which word best describes how Douglass feels after Master Hugh puts a stop to his education?</div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="A"> A. angry</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="B"> B. determined</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="C"> C. hopeful</label></div>
+                        <div class="option"><label><input type="radio" name="p2q7" value="D"> D. discouraged</label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <!-- Bottom Navigation with Part buttons and Submit -->
+    <div class="submit-section">
+        <button class="part-nav-btn active" id="part1Btn">Part 1</button>
+        <button class="part-nav-btn" id="part2Btn">Part 2</button>
+        <button id="submitBtn">Submit Test</button>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script>
+        // Highlight management - track both text and visual elements
+        const highlights = {
+            passage1: [],
+            passage2: []
+        };
+        
+        // Part navigation
+        const part1Btn = document.getElementById('part1Btn');
+        const part2Btn = document.getElementById('part2Btn');
+        const part1Reading = document.getElementById('part1-reading');
+        const part2Reading = document.getElementById('part2-reading');
+        const part1Questions = document.getElementById('part1-questions');
+        const part2Questions = document.getElementById('part2-questions');
+        const part1Highlights = document.getElementById('part1-highlights');
+        const part2Highlights = document.getElementById('part2-highlights');
+        
+        part1Btn.addEventListener('click', () => {
+            // Show Part 1
+            part1Reading.classList.add('active');
+            part1Questions.classList.add('active');
+            part1Highlights.classList.add('active');
+            part2Reading.classList.remove('active');
+            part2Questions.classList.remove('active');
+            part2Highlights.classList.remove('active');
+            
+            // Update button states
+            part1Btn.classList.add('active');
+            part2Btn.classList.remove('active');
+        });
+        
+        part2Btn.addEventListener('click', () => {
+            // Show Part 2
+            part2Reading.classList.add('active');
+            part2Questions.classList.add('active');
+            part2Highlights.classList.add('active');
+            part1Reading.classList.remove('active');
+            part1Questions.classList.remove('active');
+            part1Highlights.classList.remove('active');
+            
+            // Update button states
+            part2Btn.classList.add('active');
+            part1Btn.classList.remove('active');
+        });
+        
+        // Highlighting functionality
+        const passages = document.querySelectorAll('.passage');
+        let highlightCounter = 0; // Unique ID for each highlight
+        
+        passages.forEach(passage => {
+            passage.addEventListener('mouseup', function() {
+                const selection = window.getSelection();
+                let selectedText = selection.toString().trim();
+                
+                if (selectedText.length > 0) {
+                    const passageId = this.id;
+                    const range = selection.getRangeAt(0);
+                    
+                    // ===== PARAGRAPH BOUNDARY TRUNCATION =====
+                    const startP = range.startContainer.nodeType === 3 ? 
+                        range.startContainer.parentElement.closest('p') : 
+                        range.startContainer.closest('p');
+                    const endP = range.endContainer.nodeType === 3 ? 
+                        range.endContainer.parentElement.closest('p') : 
+                        range.endContainer.closest('p');
+                    
+                    if (startP !== endP) {
+                        // console.log('⚠️ Cross-paragraph detected - truncating to paragraph end');
+                        range.setEndAfter(startP.lastChild);
+                        selectedText = range.toString().trim();
+                        // console.log('Truncated text:', selectedText);
+                    }
+                    // ===== END BOUNDARY TRUNCATION =====
+                    
+                    highlightCounter++;
+                    const highlightId = 'highlight-' + highlightCounter;
+                    
+                    // ===== DIAGNOSTIC LOGGING: PRE-HIGHLIGHT =====
+                    // console.log('═══════════════════════════════════════');
+                    // console.log('HIGHLIGHT EVENT START');
+                    // console.log('Selected text:', selectedText);
+                    // console.log('Text length:', selectedText.length);
+                    // console.log('Passage ID:', passageId);
+                    // console.log('Current highlights count:', highlights[passageId].length);
+                    // console.log('New highlight ID:', highlightId);
+                    // console.log('Range details:', {
+                    //     startContainer: range.startContainer.nodeName,
+                    //     startOffset: range.startOffset,
+                    //     endContainer: range.endContainer.nodeName,
+                    //     endOffset: range.endOffset,
+                    //     collapsed: range.collapsed
+                    // });
+                    
+                    // Check if selection intersects existing highlights
+                    // const existingHighlights = this.querySelectorAll('.highlight');
+                    // let intersectsHighlight = false;
+                    // existingHighlights.forEach(hl => {
+                    //     if (range.intersectsNode(hl)) {
+                    //         intersectsHighlight = true;
+                    //         console.log('⚠️  WARNING: Selection intersects existing highlight:', hl.getAttribute('data-highlight-id'));
+                    //     }
+                    // });
+                    // console.log('Intersects existing highlights:', intersectsHighlight);
+                    // console.log('Total existing highlight spans in passage:', existingHighlights.length);
+                    // ===== END DIAGNOSTIC LOGGING =====
+                    
+                    // Visual feedback - highlight the selected text
+                    let highlightElements = [];
+                    try {
+                        const span = document.createElement('span');
+                        span.className = 'highlight';
+                        span.setAttribute('data-highlight-id', highlightId);
+                        
+                        // Extract contents, wrap in span, and reinsert
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
+                        
+                        highlightElements.push(span);
+                        
+                        // ===== DIAGNOSTIC LOGGING: POST-HIGHLIGHT =====
+                        // console.log('✓ Highlight span created successfully');
+                        // console.log('Elements created:', highlightElements.length);
+                        // console.log('Span contains nodes:', span.childNodes.length);
+                        
+                        // Validate DOM structure
+                        // const allHighlights = this.querySelectorAll('.highlight');
+                        // console.log('Total highlight spans after creation:', allHighlights.length);
+                        
+                        // Check for nested highlights
+                        // let nestedCount = 0;
+                        // allHighlights.forEach(hl => {
+                        //     const nestedHighlights = hl.querySelectorAll('.highlight');
+                        //     if (nestedHighlights.length > 0) {
+                        //         nestedCount++;
+                        //         console.log('⚠️  NESTED HIGHLIGHT DETECTED in:', hl.getAttribute('data-highlight-id'));
+                        //     }
+                        // });
+                        // if (nestedCount > 0) {
+                        //     console.log('⚠️  Total nested highlights:', nestedCount);
+                        // }
+                        // ===== END DIAGNOSTIC LOGGING =====
+                        
+                    } catch (e) {
+                        // If highlighting fails, still store the text
+                        // console.log('❌ Could not apply visual highlight:', e.message);
+                        // console.log('Error details:', e);
+                    }
+                    
+                    // Store both the text and reference to visual elements
+                    highlights[passageId].push({
+                        text: selectedText,
+                        id: highlightId,
+                        elements: highlightElements
+                    });
+                    
+                    // ===== DIAGNOSTIC LOGGING: ARRAY STATE =====
+                    // console.log('Highlights array updated. New length:', highlights[passageId].length);
+                    // console.log('All stored highlight IDs:', highlights[passageId].map(h => h.id));
+                    // console.log('HIGHLIGHT EVENT END');
+                    // console.log('═══════════════════════════════════════\n');
+                    // ===== END DIAGNOSTIC LOGGING =====
+                    
+                    // Update the highlights list display
+                    updateHighlightsList(passageId);
+                    
+                    selection.removeAllRanges();
+                }
+            });
+        });
+        
+        // Update the highlights list display
+        function updateHighlightsList(passageId) {
+            const listId = 'highlights-' + passageId;
+            const listElement = document.getElementById(listId);
+            const highlightArray = highlights[passageId];
+            
+            listElement.innerHTML = '';
+            
+            if (highlightArray.length === 0) {
+                listElement.innerHTML = '<li style="color: #999; font-style: italic;">No highlights yet</li>';
+            } else {
+                highlightArray.forEach((highlight, index) => {
+                    const li = document.createElement('li');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'highlight-text';
+                    textSpan.textContent = `${index + 1}. ${highlight.text}`;
+                    
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.textContent = 'Clear';
+                    clearBtn.onclick = function() {
+                        // ===== DIAGNOSTIC LOGGING: CLEAR START =====
+                        // console.log('───────────────────────────────────────');
+                        // console.log('CLEAR EVENT START');
+                        // console.log('Passage ID:', passageId);
+                        // console.log('Attempting to clear highlight:', highlight.id);
+                        // console.log('Display index when clicked:', index);
+                        // console.log('Array length before clear:', highlights[passageId].length);
+                        // console.log('Current array IDs:', highlights[passageId].map(h => h.id));
+                        
+                        // Find actual current index by ID
+                        const currentIndex = highlights[passageId].findIndex(h => h.id === highlight.id);
+                        // console.log('Actual array index for this ID:', currentIndex);
+                        
+                        if (currentIndex === -1) {
+                            // console.log('❌ ERROR: Highlight ID not found in array');
+                            // console.log('───────────────────────────────────────\n');
+                            return;
+                        }
+                        
+                        const highlightToRemove = highlights[passageId][currentIndex];
+                        // console.log('Element count for this highlight:', highlightToRemove.elements.length);
+                        
+                        // Validate element existence
+                        // let validElements = 0;
+                        // let invalidElements = 0;
+                        // highlightToRemove.elements.forEach(element => {
+                        //     if (element && element.parentNode) {
+                        //         validElements++;
+                        //     } else {
+                        //         invalidElements++;
+                        //     }
+                        // });
+                        // console.log('Valid elements:', validElements);
+                        // console.log('Invalid/detached elements:', invalidElements);
+                        // ===== END DIAGNOSTIC LOGGING =====
+                        
+                        // Remove visual highlights from the text
+                        highlightToRemove.elements.forEach(element => {
+                            if (element && element.parentNode) {
+                                const parent = element.parentNode;
+                                while (element.firstChild) {
+                                    parent.insertBefore(element.firstChild, element);
+                                }
+                                parent.removeChild(element);
+                            }
+                        });
+                        
+                        // Remove from the array using current index
+                        highlights[passageId].splice(currentIndex, 1);
+                        
+                        // ===== DIAGNOSTIC LOGGING: CLEAR END =====
+                        // console.log('Array length after clear:', highlights[passageId].length);
+                        // console.log('Remaining array IDs:', highlights[passageId].map(h => h.id));
+                        // console.log('CLEAR EVENT END');
+                        // console.log('───────────────────────────────────────\n');
+                        // ===== END DIAGNOSTIC LOGGING =====
+                        
+                        // Refresh the list
+                        updateHighlightsList(passageId);
+                    };
+                    
+                    li.appendChild(textSpan);
+                    li.appendChild(clearBtn);
+                    listElement.appendChild(li);
+                });
+            }
+        }
+        
+        // Initialize highlight lists as empty
+        updateHighlightsList('passage1');
+        updateHighlightsList('passage2');
+        
+        // Dynamically detect all questions from the HTML
+        function getAllQuestionNames() {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            const questionNames = new Set();
+            radioInputs.forEach(input => {
+                if (input.name) {
+                    questionNames.add(input.name);
+                }
+            });
+            return Array.from(questionNames).sort();
+        }
+        
+        // Generate human-readable label from question name (e.g., p1q3 -> Part 1, Question 3)
+        function getQuestionLabel(questionName) {
+            const match = questionName.match(/p(\d+)q(\d+)/);
+            if (match) {
+                const partNum = match[1];
+                const questionNum = match[2];
+                // Calculate overall question number
+                const overallNum = partNum === '1' ? parseInt(questionNum) : 7 + parseInt(questionNum);
+                return `Part ${partNum}, Question ${overallNum}`;
+            }
+            return questionName; // Fallback
+        }
+        
+        // CSV generation function
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            // If contains comma, quote, or newline, wrap in quotes and escape internal quotes
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+        
+        function downloadCSV(studentId, answers, text1Annotations, text2Annotations) {
+            // Convert annotation arrays to JSON strings (extract just the text)
+            const text1Texts = text1Annotations.map(h => h.text);
+            const text2Texts = text2Annotations.map(h => h.text);
+            const text1AnnotationsJSON = JSON.stringify(text1Texts);
+            const text2AnnotationsJSON = JSON.stringify(text2Texts);
+            
+            // Get all question names dynamically
+            const questionNames = getAllQuestionNames();
+            
+            // Separate Part 1 and Part 2 questions
+            const part1Questions = questionNames.filter(name => name.startsWith('p1'));
+            const part2Questions = questionNames.filter(name => name.startsWith('p2'));
+            
+            // Build data row dynamically
+            const row = [
+                studentId,
+                text1AnnotationsJSON,
+                ...part1Questions.map(name => answers[name] || ''),
+                text2AnnotationsJSON,
+                ...part2Questions.map(name => answers[name] || '')
+            ];
+            
+            // Build CSV content (no header, just data row)
+            const csvContent = row.map(escapeCSV).join(',');
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `student_${studentId}_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Submit handler with dynamic validation
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const statusDiv = document.getElementById('statusMessage');
+            
+            // Validate student ID
+            if (!studentId) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Error: Please enter your Student ID';
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            // Get all questions dynamically
+            const questionNames = getAllQuestionNames();
+            
+            // Collect and validate answers
+            const answers = {};
+            let missingQuestions = [];
+            
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    answers[name] = selected.value;
+                } else {
+                    answers[name] = '';
+                    missingQuestions.push(getQuestionLabel(name));
+                }
+            });
+            
+            // Check if any questions are missing
+            if (missingQuestions.length > 0) {
+                statusDiv.className = 'status-message error';
+                if (missingQuestions.length === 1) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions[0]}`;
+                } else if (missingQuestions.length <= 3) {
+                    statusDiv.textContent = `Error: Please answer ${missingQuestions.join(', ')}`;
+                } else {
+                    statusDiv.textContent = `Error: Please answer all questions (${missingQuestions.length} remaining)`;
+                }
+                statusDiv.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during download
+            this.disabled = true;
+            statusDiv.className = 'status-message';
+            statusDiv.textContent = 'Generating CSV...';
+            statusDiv.style.display = 'block';
+            
+            try {
+                // Generate and download CSV
+                downloadCSV(
+                    studentId,
+                    answers,
+                    highlights.passage1,
+                    highlights.passage2
+                );
+                
+                statusDiv.className = 'status-message success';
+                statusDiv.textContent = 'CSV file downloaded! Please provide it to your instructor.';
+                
+                // Re-enable after 3 seconds
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.className = 'status-message error';
+                statusDiv.textContent = 'Download error. Please notify the instructor.';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
